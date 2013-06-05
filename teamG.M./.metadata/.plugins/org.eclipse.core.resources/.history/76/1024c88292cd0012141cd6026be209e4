@@ -11,17 +11,12 @@ import org.json.JSONObject;
 import com.jemcphe.LayoutLib.SpinnerDisplay;
 import com.jemcphe.LayoutLib.TeamDisplay;
 import com.jemcphe.LayoutLib.TeamSearch;
-import com.jemcphe.LeagueLib.DataService;
 import com.jemcphe.LeagueLib.FileInfo;
 import com.jemcphe.LeagueLib.WebData;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Messenger;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -137,28 +132,6 @@ public class MainActivity extends Activity {
 					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
 					toast.show();
 				}
-				
-				Handler dataHandler = new Handler() {
-
-					@Override
-					public void handleMessage(Message msg) {
-						// TODO Auto-generated method stub
-						String response = null;
-						if (msg.arg1 == RESULT_OK && msg.obj != null) {
-							try {
-								response = (String) msg.obj;
-							}
-							catch (Exception e){
-								Log.e("", e.getMessage().toString());
-							}
-						}	
-					}
-				};
-				
-				Messenger dataMessenger = new Messenger(dataHandler);
-				
-				Intent startDataIntent = new Intent(_context, DataService.class);
-				
 				
 				
 //				_teamLayout.setVisibility(8);

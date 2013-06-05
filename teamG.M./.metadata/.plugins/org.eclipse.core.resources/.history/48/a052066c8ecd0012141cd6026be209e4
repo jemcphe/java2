@@ -5,8 +5,8 @@ import android.content.Intent;
 
 public class DataService extends IntentService{
 
-	public DataService() {
-		super("DataService");
+	public DataService(String name) {
+		super(name);
 		// TODO Auto-generated constructor stub
 	}
 

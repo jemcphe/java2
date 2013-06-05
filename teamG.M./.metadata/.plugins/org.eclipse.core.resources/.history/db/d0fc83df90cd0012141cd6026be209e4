@@ -11,17 +11,12 @@ import org.json.JSONObject;
 import com.jemcphe.LayoutLib.SpinnerDisplay;
 import com.jemcphe.LayoutLib.TeamDisplay;
 import com.jemcphe.LayoutLib.TeamSearch;
-import com.jemcphe.LeagueLib.DataService;
 import com.jemcphe.LeagueLib.FileInfo;
 import com.jemcphe.LeagueLib.WebData;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Messenger;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -133,59 +128,31 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				if(_field.getText().toString().length() == 0){
-					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
-					toast.show();
-				}
-				
-				Handler dataHandler = new Handler() {
-
-					@Override
-					public void handleMessage(Message msg) {
-						// TODO Auto-generated method stub
-						String response = null;
-						if (msg.arg1 == RESULT_OK && msg.obj != null) {
-							try {
-								response = (String) msg.obj;
-							}
-							catch (Exception e){
-								Log.e("", e.getMessage().toString());
-							}
-						}	
-					}
-				};
-				
-				Messenger dataMessenger = new Messenger(dataHandler);
-				
-				Intent startDataIntent = new Intent(_context, DataService.class);
-				
-				
-				
-//				_teamLayout.setVisibility(8);
-//				_historyLabel.setVisibility(8);
-//				//_mainLayout.removeView(_teamDisplay);
-//				getTeam(_field.getText().toString());
-//				_teamLayout.setVisibility(0);
+				_teamLayout.setVisibility(8);
+				_historyLabel.setVisibility(8);
+				//_mainLayout.removeView(_teamDisplay);
+				getTeam(_field.getText().toString());
+				_teamLayout.setVisibility(0);
 			}
 		});
         
-//        Button rawDataButton = (Button) findViewById(R.id.dataButton);
-//        rawDataButton.setText("Show Raw Data");
-//        
-////        _historyLayout.addView(rawDataButton);
-//
-//        rawDataButton.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {				
-//				_teamLayout.setVisibility(8);
-//				_history = new HashMap<String, String>();
-//				_history = getHistory();
-//				Log.i("JSON PULL TEST", _history.toString());
-//	    		_historyLabel = (TextView) findViewById(R.id.historyLabel);
-//				_historyLabel.setText("\r\n" + _history.toString() + "\r\n");
-//				_historyLabel.setVisibility(0);
-//			}
-//		});       
+        Button rawDataButton = (Button) findViewById(R.id.dataButton);
+        rawDataButton.setText("Show Raw Data");
+        
+//        _historyLayout.addView(rawDataButton);
+
+        rawDataButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {				
+				_teamLayout.setVisibility(8);
+				_history = new HashMap<String, String>();
+				_history = getHistory();
+				Log.i("JSON PULL TEST", _history.toString());
+	    		_historyLabel = (TextView) findViewById(R.id.historyLabel);
+				_historyLabel.setText("\r\n" + _history.toString() + "\r\n");
+				_historyLabel.setVisibility(0);
+			}
+		});       
     }
 
 
