@@ -157,10 +157,7 @@ public class MainActivity extends Activity {
 				
 				Messenger dataMessenger = new Messenger(dataHandler);
 				
-				Intent dataIntent = new Intent(_context, DataService.class);
-				dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
-				dataIntent.putExtra(DataService.TEAM_KEY, _field.getText().toString());
-				startService(dataIntent);
+				Intent startDataIntent = new Intent(_context, DataService.class);
 				
 				
 				

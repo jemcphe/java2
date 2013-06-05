@@ -5,10 +5,6 @@ import android.content.Intent;
 
 public class DataService extends IntentService{
 
-	public static final String MESSENGER_KEY = "messenger";
-	public static final String TEAM_KEY = "team";
-	
-	
 	public DataService() {
 		super("DataService");
 		// TODO Auto-generated constructor stub
