@@ -165,8 +165,7 @@ public class MainActivity extends Activity {
     
     private void getTeam(String team){
     	Log.i("CLICK: ", team);
-    	//String baseURL = "http://jemcphe.cloudant.com/mlb/" + team;
-    	String baseURL = "https://erikberg.com/mlb/standings.json";
+    	String baseURL = "http://jemcphe.cloudant.com/mlb/" + team;
     	//Create URL to pass to TeamRequest
     	URL finalURL;
     	try {

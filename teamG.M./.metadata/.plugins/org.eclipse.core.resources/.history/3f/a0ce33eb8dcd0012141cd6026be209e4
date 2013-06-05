@@ -1,0 +1,7 @@
+package com.jemcphe.LeagueLib;
+
+import android.app.IntentService;
+
+public class DataService extends IntentService{
+
+}
