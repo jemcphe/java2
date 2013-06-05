@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <style name="AppTheme" parent="android:Theme.Holo" />
+    
+    <style name="TeamName">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#1c4dee</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+	
+    <style name="Column2">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+</resources>

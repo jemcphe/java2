@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="remote">
+	    <item>Texas Rangers</item>
+		<item>New York Yankees</item>
+		<item>Detroit Tigers</item>
+		<item>Atlanta Braves</item>
+		<item>St. Louis</item>
+	</string-array>
+	
+</resources>
