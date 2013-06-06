@@ -65,10 +65,9 @@ public class DataService extends IntentService{
 				Log.i("TEST DATA GRAB", results.getString("location").toString());
 				//updateData(results);
 				dataArray.put(results);
-				Log.i("DATA ARRAY", dataArray.toString());
 //				_history.put(results.getString("name"), results.toString());
 //				FileInfo.storeObjectFile(_context, "history", _history, true);
-				FileInfo.storeStringFile(this, "temp", dataArray.toString(), true);
+				FileInfo.storeStringFile(this, "temp", results.toString(), true);
 
 		} catch (JSONException e) {
 //			Toast toast = Toast.makeText(_context, "Invalid Team Entry. Please Try Again.", Toast.LENGTH_LONG);

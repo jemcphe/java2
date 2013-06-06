@@ -1,0 +1,53 @@
+package com.jemcphe.LeagueLib;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import com.jemcphe.teamgm.MainActivity;
+
+import android.app.IntentService;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Messenger;
+import android.util.Log;
+
+public class DataService extends IntentService{
+
+	public static final String MESSENGER_KEY = "messenger";
+	public static final String TEAM_KEY = "team";
+	
+	
+	public DataService() {
+		super("DataService");
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		Log.i("onHandleIntent", "Service has started");
+		
+		Bundle extras = intent.getExtras();
+		Messenger messenger = (Messenger) extras.get(MESSENGER_KEY);
+		String team = extras.getString(TEAM_KEY);
+		
+		//Create URL
+		URL dataURL;
+		try {
+			dataURL = new URL("http://jemcphe.cloudant.com/mlb/" + team);
+		} catch (MalformedURLException e) {
+			Log.e("BAD URL", "MALFORMED URL");
+			dataURL = null;
+		}
+		//Create String Response
+		String response;
+		response = WebData.getURLStringResponse(dataURL);
+		
+		
+		
+
+		
+		
+	}
+	
+}

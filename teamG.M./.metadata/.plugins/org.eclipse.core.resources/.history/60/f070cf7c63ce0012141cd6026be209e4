@@ -150,7 +150,6 @@ public class MainActivity extends Activity {
 							try {
 								response = "Service Finished";
 								Log.i("Service Status", response);
-								
 								//getTeam();
 							}
 							catch (Exception e){

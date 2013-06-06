@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
 	TextView dataBox;
 	TextView _teamData;
 	TextView _historyLabel;
-	static EditText field;
+	EditText _field;
 	RadioGroup teamOptions;
 	String[] teamNames;
 	Boolean _connected = false;
@@ -126,14 +126,14 @@ public class MainActivity extends Activity {
         
         //Create LinearLayout for Main Layout
         _mainLayout = (LinearLayout) findViewById(R.layout.applayout);
-        field = (EditText) findViewById(R.id.searchField);
+        _field = (EditText) findViewById(R.id.searchField);
         Button searchButton = (Button) findViewById(R.id.searchButton);
         
         searchButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				
-				if(field.getText().toString().length() == 0){
+				if(_field.getText().toString().length() == 0){
 					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
 					toast.show();
 				}
@@ -145,12 +145,10 @@ public class MainActivity extends Activity {
 					public void handleMessage(Message msg) {
 						// TODO Auto-generated method stub
 						String response = null;
-						if (msg.arg1 == RESULT_OK) {
+						if (msg.arg1 == RESULT_OK && msg.obj != null) {
 
 							try {
-								response = "Service Finished";
-								Log.i("Service Status", response);
-								
+								response = (String) msg.obj;
 								//getTeam();
 							}
 							catch (Exception e){
@@ -164,7 +162,7 @@ public class MainActivity extends Activity {
 				
 				Intent dataIntent = new Intent(_context, DataService.class);
 				dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
-				dataIntent.putExtra(DataService.TEAM_KEY, field.getText().toString());
+				dataIntent.putExtra(DataService.TEAM_KEY, _field.getText().toString());
 				startService(dataIntent);
 				
 				
@@ -204,21 +202,19 @@ public class MainActivity extends Activity {
         return true;
     }
     
-    @SuppressWarnings("unused")
-	private void getTeam(String team){
+    private void getTeam(){
     	Log.i("CLICK: ", "Get Team Initiated");
     	//String baseURL = "http://jemcphe.cloudant.com/mlb/" + team;
-    	//String baseURL = "https://erikberg.com/mlb/standings.json";
+    	String baseURL = "https://erikberg.com/mlb/standings.json";
     	//Create URL to pass to TeamRequest
-    	URL baseURL;
+    	URL finalURL;
     	try {
-    		baseURL = new URL("http://jemcphe.cloudant.com/mlb/" + team);
-//			finalURL = new URL(baseURL);
-//			TeamRequest tr = new TeamRequest();
-//			tr.execute(finalURL);
+			finalURL = new URL(baseURL);
+			TeamRequest tr = new TeamRequest();
+			tr.execute(finalURL);
 		} catch (MalformedURLException e) {
 			Log.e("BAD URL", "MALFORMED URL");
-			baseURL = null;
+			finalURL = null;
 		}
     }
     
@@ -237,22 +233,22 @@ public class MainActivity extends Activity {
 //    }
     
 
-//	@SuppressWarnings("unchecked")
-//	private HashMap<String, String> getHistory(){
-//    	Object stored = FileInfo.readObjectFile(_context, "history", true);
-//
-//    	HashMap<String, String> history;
-//    	if(stored == null){
-//    		Toast toast = Toast.makeText(_context, "THERE IS CURRENTLY NO DATA",  Toast.LENGTH_LONG);
-//			toast.show();
-//    		history = new HashMap<String, String>();
-//    	} else {
-//    		history = (HashMap<String, String>) stored;
-//    		Toast toast = Toast.makeText(_context, "DATA PULLED FROM STORAGE ",  Toast.LENGTH_LONG);
-//			toast.show();
-//    	}
-//    	return history;
-//    }
+	@SuppressWarnings("unchecked")
+	private HashMap<String, String> getHistory(){
+    	Object stored = FileInfo.readObjectFile(_context, "history", true);
+
+    	HashMap<String, String> history;
+    	if(stored == null){
+    		Toast toast = Toast.makeText(_context, "THERE IS CURRENTLY NO DATA",  Toast.LENGTH_LONG);
+			toast.show();
+    		history = new HashMap<String, String>();
+    	} else {
+    		history = (HashMap<String, String>) stored;
+    		Toast toast = Toast.makeText(_context, "DATA PULLED FROM STORAGE ",  Toast.LENGTH_LONG);
+			toast.show();
+    	}
+    	return history;
+    }
     
     
     private class TeamRequest extends AsyncTask<URL, Void, String>{
@@ -279,10 +275,9 @@ public class MainActivity extends Activity {
 					Log.i("TEAM DATA", results.toString());
 					Log.i("TEST DATA GRAB", results.getString("location").toString());
 					updateData(results);
-					dataArray.put(results);
-//					_history.put(results.getString("name"), results.toString());
-//					FileInfo.storeObjectFile(_context, "history", _history, true);
-//					FileInfo.storeStringFile(_context, "temp", results.toString(), true);
+					_history.put(results.getString("name"), results.toString());
+					FileInfo.storeObjectFile(_context, "history", _history, true);
+					FileInfo.storeStringFile(_context, "temp", results.toString(), true);
 
 			} catch (JSONException e) {
 				Toast toast = Toast.makeText(_context, "Invalid Team Entry. Please Try Again.", Toast.LENGTH_LONG);

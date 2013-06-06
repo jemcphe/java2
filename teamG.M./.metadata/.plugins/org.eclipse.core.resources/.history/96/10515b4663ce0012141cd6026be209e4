@@ -145,12 +145,10 @@ public class MainActivity extends Activity {
 					public void handleMessage(Message msg) {
 						// TODO Auto-generated method stub
 						String response = null;
-						if (msg.arg1 == RESULT_OK) {
+						if (msg.arg1 == RESULT_OK && msg.obj != null) {
 
 							try {
-								response = "Service Finished";
-								Log.i("Service Status", response);
-								
+								response = (String) msg.obj;
 								//getTeam();
 							}
 							catch (Exception e){

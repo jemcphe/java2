@@ -65,7 +65,6 @@ public class DataService extends IntentService{
 				Log.i("TEST DATA GRAB", results.getString("location").toString());
 				//updateData(results);
 				dataArray.put(results);
-				Log.i("DATA ARRAY", dataArray.toString());
 //				_history.put(results.getString("name"), results.toString());
 //				FileInfo.storeObjectFile(_context, "history", _history, true);
 				FileInfo.storeStringFile(this, "temp", dataArray.toString(), true);
