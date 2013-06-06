@@ -87,6 +87,12 @@ public class DataService extends IntentService{
 			Log.e("onHandleIntent", e.getMessage().toString());
 			e.printStackTrace();
 		}
+		
+		
+		
+
+		
+		
 	}
 	
 }

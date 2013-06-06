@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
         
 //        _history = new HashMap<String, String>();       
 //        _historyLayout = (LinearLayout) findViewById(R.id.historyLayout);
-		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
+//		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
 
         //Determine data connection
         _connected = WebData.getConnectionStatus(_context);
@@ -155,7 +155,7 @@ public class MainActivity extends Activity {
 								_data = new JSONArray(teamData);
 								_teamObject = _data.getJSONObject(0);
 								updateData(_teamObject);
-								_teamLayout.setVisibility(0);
+								
 								
 								//getTeam();
 							}

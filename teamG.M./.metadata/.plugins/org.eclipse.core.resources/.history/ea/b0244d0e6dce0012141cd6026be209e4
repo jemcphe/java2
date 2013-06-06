@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
 	Context _context;
 	HashMap<String, String> _history;
 	JSONArray _data;
-	JSONObject _teamObject;
+	JSONObject _teamJson;
 	ImageView _headerImage;
 	ImageView _startingImage;
 	
@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
         
 //        _history = new HashMap<String, String>();       
 //        _historyLayout = (LinearLayout) findViewById(R.id.historyLayout);
-		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
+//		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
 
         //Determine data connection
         _connected = WebData.getConnectionStatus(_context);
@@ -153,9 +153,9 @@ public class MainActivity extends Activity {
 								
 								String teamData = FileInfo.readStringFile(_context, "temp", true);
 								_data = new JSONArray(teamData);
-								_teamObject = _data.getJSONObject(0);
-								updateData(_teamObject);
-								_teamLayout.setVisibility(0);
+								
+								Log.i("Pulled Data", _data.toString());
+								
 								
 								//getTeam();
 							}

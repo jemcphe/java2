@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
         
 //        _history = new HashMap<String, String>();       
 //        _historyLayout = (LinearLayout) findViewById(R.id.historyLayout);
-		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
+//		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
 
         //Determine data connection
         _connected = WebData.getConnectionStatus(_context);
