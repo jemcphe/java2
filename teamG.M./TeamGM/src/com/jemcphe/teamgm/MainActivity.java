@@ -1,7 +1,5 @@
 package com.jemcphe.teamgm;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 
 
@@ -14,11 +12,11 @@ import com.jemcphe.LayoutLib.TeamSearch;
 import com.jemcphe.LeagueLib.DataService;
 import com.jemcphe.LeagueLib.FileInfo;
 import com.jemcphe.LeagueLib.WebData;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +42,7 @@ public class MainActivity extends Activity {
 	TeamSearch _search;
 	TeamDisplay _teamDisplay;
 	SpinnerDisplay _teamList;
-	
+
 	//Declare Variables
 	ScrollView _scrollView;
 	TextView _searchLabel;
@@ -61,7 +59,7 @@ public class MainActivity extends Activity {
 	JSONObject _teamObject;
 	ImageView _headerImage;
 	ImageView _startingImage;
-	
+
 	//TeamDisplay Variables for setting values
 	String _teamName;
 	String _pitcher;
@@ -74,8 +72,9 @@ public class MainActivity extends Activity {
 	String _center;
 	String _right;
 	
+	//FUNCTION FOR UPDATING TEAM DATA ON THE SCREEN
 	public void updateData(JSONObject data){
-		
+
 		try {
 			((TextView) findViewById(R.id.teamNameData)).setText(data.getString("location") + " " + data.getString("name"));
 			((TextView) findViewById(R.id.pitcherData)).setText(data.getString("pitcher"));
@@ -92,226 +91,225 @@ public class MainActivity extends Activity {
 			Log.e("JSON ERROR", e.toString());
 		}
 	}
-	
-	
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-        setContentView(R.layout.applayout);
-        
-        _headerImage = (ImageView) findViewById(R.drawable.header);
-        
-        _context = this;
-        
-//        _data = new JSONArray();
-//        _teamJson = new JSONObject();
-        
-//        _history = new HashMap<String, String>();       
-//        _historyLayout = (LinearLayout) findViewById(R.id.historyLayout);
+
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		//SET THE MAIN VIEW
+		setContentView(R.layout.applayout);
+		
+		//HEADER IMAGE
+		_headerImage = (ImageView) findViewById(R.drawable.header);
+		
+		//UNIVERSAL CONTEXT VARIABLE
+		_context = this;
+		
+		//DEFINE LAYOUT THAT WILL HOLD TEAM DATA
 		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
 
-        //Determine data connection
-        _connected = WebData.getConnectionStatus(_context);
-        
-        //Check for connection
-        if(_connected) {
-        	Toast toast = Toast.makeText(_context, "Currently connected via " + WebData.getConnectionType(_context).toString(), Toast.LENGTH_SHORT);
+		//Determine data connection
+		_connected = WebData.getConnectionStatus(_context);
+
+		//Check for connection
+		if(_connected) {
+			//DISPLAY CONNECTION TYPE TO USER
+			Toast toast = Toast.makeText(_context, "Currently connected via " + WebData.getConnectionType(_context).toString(), Toast.LENGTH_SHORT);
 			toast.show();
-        	Log.i("Network Connection", WebData.getConnectionType(_context));
-        } else {
+			Log.i("Network Connection", WebData.getConnectionType(_context));
+		} else {
+			//LET USER KNOW THEY HAVE NO DATA
 			Toast toast = Toast.makeText(_context, "YOU CURRENTLY HAVE NO DATA CONNECTION!!", Toast.LENGTH_LONG);
 			toast.show();
-        }
-        
-        //Create LinearLayout for Main Layout
-        _mainLayout = (LinearLayout) findViewById(R.layout.applayout);
-        field = (EditText) findViewById(R.id.searchField);
-        Button searchButton = (Button) findViewById(R.id.searchButton);
-        
-        searchButton.setOnClickListener(new OnClickListener() {
+		}
+
+		//Create LinearLayout for Main Layout
+		_mainLayout = (LinearLayout) findViewById(R.layout.applayout);
+		
+		//DEFINE EDITTEXT FIELD
+		field = (EditText) findViewById(R.id.searchField);
+		
+		//DEFINE THE SEARCH BUTTON
+		Button searchButton = (Button) findViewById(R.id.searchButton);
+
+		//CREATE AN ONCLICKLISTENER FOR SEARCH BUTTON THAT WILL CALL ON SERVICE CLASS
+		searchButton.setOnClickListener(new OnClickListener() {
+			@SuppressLint("HandlerLeak")
 			@Override
 			public void onClick(View v) {
-				
-				if(field.getText().toString().length() == 0){
-					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
-					toast.show();
-				}
-				
+				//HANDLE DATA FROM SERVICE
 				Handler dataHandler = new Handler() {
 
-					@SuppressWarnings("unused")
 					@Override
 					public void handleMessage(Message msg) {
 						// TODO Auto-generated method stub
 						String response = null;
+						//CHECK FOR PROPER SERVICE COMPLETION
 						if (msg.arg1 == RESULT_OK) {
-
+							
 							try {
+								//TELL DEBUGGER THAT SERVICE HAS FINISHED
 								response = "Service Finished";
 								Log.i("Service Status", response);
 								
-								String teamData = FileInfo.readStringFile(_context, "temp", true);
+								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
+								String teamData = FileInfo.readStringFile(_context, field.getText().toString(), true);
+								//CREATE JSONARRAY FROM FILE
 								_data = new JSONArray(teamData);
+								//CREATE JSONOBJECT FROM ARRAY INDEX
 								_teamObject = _data.getJSONObject(0);
+								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
 								updateData(_teamObject);
+								//SET THE TEAMLAYOUT VISIBILITY
 								_teamLayout.setVisibility(0);
-								
-								//getTeam();
 							}
 							catch (Exception e){
+								/*
+								 * TELL THE USER THAT THEY NEED ENTERED AN INVALID TEAM NAME
+								 * OR THEY NEED TO BE CONNECTED TO INTERNET FOR TEAM INFORMATION
+								 */
+								Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
+								toast.show();
+
 								Log.e("", e.getMessage().toString());
 							}
 						}	
 					}
 				};
 				
-				Messenger dataMessenger = new Messenger(dataHandler);
-				
-				Intent dataIntent = new Intent(_context, DataService.class);
-				dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
-				dataIntent.putExtra(DataService.TEAM_KEY, field.getText().toString());
-				startService(dataIntent);
-				
-				
-				
-//				_teamLayout.setVisibility(8);
-//				_historyLabel.setVisibility(8);
-//				//_mainLayout.removeView(_teamDisplay);
-//				getTeam(_field.getText().toString());
-//				_teamLayout.setVisibility(0);
-			}
-		});
-        
-//        Button rawDataButton = (Button) findViewById(R.id.dataButton);
-//        rawDataButton.setText("Show Raw Data");
-//        
-////        _historyLayout.addView(rawDataButton);
-//
-//        rawDataButton.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {				
-//				_teamLayout.setVisibility(8);
-//				_history = new HashMap<String, String>();
-//				_history = getHistory();
-//				Log.i("JSON PULL TEST", _history.toString());
-//	    		_historyLabel = (TextView) findViewById(R.id.historyLabel);
-//				_historyLabel.setText("\r\n" + _history.toString() + "\r\n");
-//				_historyLabel.setVisibility(0);
-//			}
-//		});       
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    
-    @SuppressWarnings("unused")
-	private void getTeam(String team){
-    	Log.i("CLICK: ", "Get Team Initiated");
-    	//String baseURL = "http://jemcphe.cloudant.com/mlb/" + team;
-    	//String baseURL = "https://erikberg.com/mlb/standings.json";
-    	//Create URL to pass to TeamRequest
-    	URL baseURL;
-    	try {
-    		baseURL = new URL("http://jemcphe.cloudant.com/mlb/" + team);
-//			finalURL = new URL(baseURL);
-//			TeamRequest tr = new TeamRequest();
-//			tr.execute(finalURL);
-		} catch (MalformedURLException e) {
-			Log.e("BAD URL", "MALFORMED URL");
-			baseURL = null;
-		}
-    }
-    
-    
-//    public void readFile(String team) throws IOException, JSONException{
-//    	String stored = FileInfo.readStringFile(_context, "temp", true);
-//    	JSONObject json = new JSONObject();
-//    	json.put(team, stored);
-//    	_data.put(json);
-//    	StringBuffer teamBuffer = new StringBuffer();
-//    	for(int i=0; i<_data.length();i++){
-//    		String text = _data.getJSONObject(i).getString("name");
-//    		teamBuffer.append(text + "\r\n");
-//    	}
-//    	Log.i("DATA ARRAY", teamBuffer.toString());
-//    }
-    
-
-//	@SuppressWarnings("unchecked")
-//	private HashMap<String, String> getHistory(){
-//    	Object stored = FileInfo.readObjectFile(_context, "history", true);
-//
-//    	HashMap<String, String> history;
-//    	if(stored == null){
-//    		Toast toast = Toast.makeText(_context, "THERE IS CURRENTLY NO DATA",  Toast.LENGTH_LONG);
-//			toast.show();
-//    		history = new HashMap<String, String>();
-//    	} else {
-//    		history = (HashMap<String, String>) stored;
-//    		Toast toast = Toast.makeText(_context, "DATA PULLED FROM STORAGE ",  Toast.LENGTH_LONG);
-//			toast.show();
-//    	}
-//    	return history;
-//    }
-    
-    
-    private class TeamRequest extends AsyncTask<URL, Void, String>{
-    	@Override
-    	protected String doInBackground(URL... urls){
-    		String response = "";
-    		for(URL url: urls){
-    			response = WebData.getURLStringResponse(url);
-    		}
-    		return response;
-    	}
-    	
-    	@Override
-    	protected void onPostExecute(String result){
-    		//JSON DATA RETRIEVED, Now set TeamDisplay strings
-    		Log.i("URL RESPONSE", result);
-    		try {
-    			JSONArray dataArray = new JSONArray();
-				JSONObject json = new JSONObject(result);
-				JSONObject results = json.getJSONObject("info");
-
-				Toast toast = Toast.makeText(_context, results.getString("name") + " data displayed & stored to device",  Toast.LENGTH_SHORT);
+				//CHECK FOR USER ENTRY IN EDITTEXT FIELD
+				if(field.getText().toString().length() == 0){
+					//TELL USER TO ENTER A TEAM
+					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
 					toast.show();
-					Log.i("TEAM DATA", results.toString());
-					Log.i("TEST DATA GRAB", results.getString("location").toString());
-					updateData(results);
-					dataArray.put(results);
-//					_history.put(results.getString("name"), results.toString());
-//					FileInfo.storeObjectFile(_context, "history", _history, true);
-//					FileInfo.storeStringFile(_context, "temp", results.toString(), true);
-
-			} catch (JSONException e) {
-				Toast toast = Toast.makeText(_context, "Invalid Team Entry. Please Try Again.", Toast.LENGTH_LONG);
-				toast.show();
-				Log.e("JSON", "JSON OBJECT EXCEPTION");
+				} else {
+					//CREATE MESSENGER
+					Messenger dataMessenger = new Messenger(dataHandler);
+					
+					/*
+					 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
+					 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
+					 */
+					Intent dataIntent = new Intent(_context, DataService.class);
+					dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
+					dataIntent.putExtra(DataService.TEAM_KEY, field.getText().toString());
+					startService(dataIntent);
+				}
 			}
-    	}
-    }
-    
-	
-//	@SuppressWarnings({"rawtypes" })
-//	public void readFromFile(HashMap history) {
-//		Set historySet = history.entrySet();
-//		Iterator i = historySet.iterator();
-//		while(i.hasNext()) {
-//			Map.Entry mapEntry = (Map.Entry) i.next();
-//			//_historyLabel = new TextView(_context);
-//			//_historyLabel.setText(mapEntry.getKey().toString() + "\r\n"+ mapEntry.getKey().toString());
-//			//System.out.println("HASH KEY: "+ mapEntry.getKey());
+		});      
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+/********************************** LEGACY CODE ***********************************/
+//	@SuppressWarnings("unused")
+//	private void getTeam(String team){
+//		Log.i("CLICK: ", "Get Team Initiated");
+//		//String baseURL = "http://jemcphe.cloudant.com/mlb/" + team;
+//		//String baseURL = "https://erikberg.com/mlb/standings.json";
+//		//Create URL to pass to TeamRequest
+//		URL baseURL;
+//		try {
+//			baseURL = new URL("http://jemcphe.cloudant.com/mlb/" + team);
+//			//			finalURL = new URL(baseURL);
+//			//			TeamRequest tr = new TeamRequest();
+//			//			tr.execute(finalURL);
+//		} catch (MalformedURLException e) {
+//			Log.e("BAD URL", "MALFORMED URL");
+//			baseURL = null;
 //		}
-//		
-//
 //	}
-    
-    
+
+
+	//    public void readFile(String team) throws IOException, JSONException{
+	//    	String stored = FileInfo.readStringFile(_context, "temp", true);
+	//    	JSONObject json = new JSONObject();
+	//    	json.put(team, stored);
+	//    	_data.put(json);
+	//    	StringBuffer teamBuffer = new StringBuffer();
+	//    	for(int i=0; i<_data.length();i++){
+	//    		String text = _data.getJSONObject(i).getString("name");
+	//    		teamBuffer.append(text + "\r\n");
+	//    	}
+	//    	Log.i("DATA ARRAY", teamBuffer.toString());
+	//    }
+
+
+	//	@SuppressWarnings("unchecked")
+	//	private HashMap<String, String> getHistory(){
+	//    	Object stored = FileInfo.readObjectFile(_context, "history", true);
+	//
+	//    	HashMap<String, String> history;
+	//    	if(stored == null){
+	//    		Toast toast = Toast.makeText(_context, "THERE IS CURRENTLY NO DATA",  Toast.LENGTH_LONG);
+	//			toast.show();
+	//    		history = new HashMap<String, String>();
+	//    	} else {
+	//    		history = (HashMap<String, String>) stored;
+	//    		Toast toast = Toast.makeText(_context, "DATA PULLED FROM STORAGE ",  Toast.LENGTH_LONG);
+	//			toast.show();
+	//    	}
+	//    	return history;
+	//    }
+
+
+//	private class TeamRequest extends AsyncTask<URL, Void, String>{
+//		@Override
+//		protected String doInBackground(URL... urls){
+//			String response = "";
+//			for(URL url: urls){
+//				response = WebData.getURLStringResponse(url);
+//			}
+//			return response;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(String result){
+//			//JSON DATA RETRIEVED, Now set TeamDisplay strings
+//			Log.i("URL RESPONSE", result);
+//			try {
+//				JSONArray dataArray = new JSONArray();
+//				JSONObject json = new JSONObject(result);
+//				JSONObject results = json.getJSONObject("info");
+//
+//				Toast toast = Toast.makeText(_context, results.getString("name") + " data displayed & stored to device",  Toast.LENGTH_SHORT);
+//				toast.show();
+//				Log.i("TEAM DATA", results.toString());
+//				Log.i("TEST DATA GRAB", results.getString("location").toString());
+//				updateData(results);
+//				dataArray.put(results);
+//				//					_history.put(results.getString("name"), results.toString());
+//				//					FileInfo.storeObjectFile(_context, "history", _history, true);
+//				//					FileInfo.storeStringFile(_context, "temp", results.toString(), true);
+//
+//			} catch (JSONException e) {
+//				Toast toast = Toast.makeText(_context, "Invalid Team Entry. Please Try Again.", Toast.LENGTH_LONG);
+//				toast.show();
+//				Log.e("JSON", "JSON OBJECT EXCEPTION");
+//			}
+//		}
+//	}
+
+
+	//	@SuppressWarnings({"rawtypes" })
+	//	public void readFromFile(HashMap history) {
+	//		Set historySet = history.entrySet();
+	//		Iterator i = historySet.iterator();
+	//		while(i.hasNext()) {
+	//			Map.Entry mapEntry = (Map.Entry) i.next();
+	//			//_historyLabel = new TextView(_context);
+	//			//_historyLabel.setText(mapEntry.getKey().toString() + "\r\n"+ mapEntry.getKey().toString());
+	//			//System.out.println("HASH KEY: "+ mapEntry.getKey());
+	//		}
+	//		
+	//
+	//	}
+
+
 }

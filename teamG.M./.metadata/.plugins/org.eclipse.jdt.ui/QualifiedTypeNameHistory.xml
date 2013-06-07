@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.jemcphe.LeagueLib.TeamInterface"/>
-<fullyQualifiedTypeName name="android.widget.RadioButton"/>
-<fullyQualifiedTypeName name="com.jemcphe.teamgm.R.array"/>
-<fullyQualifiedTypeName name="com.jemcphe.LeagueLib.JSON"/>
-<fullyQualifiedTypeName name="com.jemcphe.LeagueLib.Teams"/>
-<fullyQualifiedTypeName name="android.widget.GridLayout"/>
-<fullyQualifiedTypeName name="android.widget.Spinner"/>
-<fullyQualifiedTypeName name="com.jemcphe.LayoutLib.SpinnerDisplay"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
-<fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
 <fullyQualifiedTypeName name="android.R"/>
 <fullyQualifiedTypeName name="android.R.layout"/>
 <fullyQualifiedTypeName name="android.net.ConnectivityManager"/>
 <fullyQualifiedTypeName name="android.net.NetworkInfo"/>
-<fullyQualifiedTypeName name="com.jemcphe.LeagueLib.WebData"/>
 <fullyQualifiedTypeName name="java.net.URLConnection"/>
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 <fullyQualifiedTypeName name="android.widget.Button"/>
@@ -44,7 +33,6 @@
 <fullyQualifiedTypeName name="android.widget.EditText"/>
 <fullyQualifiedTypeName name="com.jemcphe.teamgm.R"/>
 <fullyQualifiedTypeName name="android.widget.TextView"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="java.util.Set"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
@@ -60,4 +48,16 @@
 <fullyQualifiedTypeName name="android.widget.ViewSwitcher"/>
 <fullyQualifiedTypeName name="com.jemcphe.teamgm.R.id"/>
 <fullyQualifiedTypeName name="com.jemcphe.teamgm.R.drawable"/>
+<fullyQualifiedTypeName name="android.app.IntentService"/>
+<fullyQualifiedTypeName name="android.os.Handler"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="com.jemcphe.LeagueLib.DataService"/>
+<fullyQualifiedTypeName name="android.os.Bundle"/>
+<fullyQualifiedTypeName name="android.os.Messenger"/>
+<fullyQualifiedTypeName name="com.jemcphe.LeagueLib.WebData"/>
+<fullyQualifiedTypeName name="com.jemcphe.teamgm.MainActivity"/>
+<fullyQualifiedTypeName name="android.os.Message"/>
+<fullyQualifiedTypeName name="android.app.Activity"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="android.os.RemoteException"/>
 </qualifiedTypeNameHistroy>

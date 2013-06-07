@@ -46,6 +46,7 @@ public class WebData {
 		String response = "";
 		
 		try {
+			//CREATE CONNECTION FROM GIVEN URL & BUFFER INPUT STREAM
 			URLConnection connection = url.openConnection();
 			BufferedInputStream bin = new BufferedInputStream(connection.getInputStream());
 			
@@ -60,7 +61,7 @@ public class WebData {
 			return responseBuffer.toString();
 			
 		} catch (Exception e) {
-			Log.e("URL RESPONSE ERROR", "getURLStringResponse");
+			Log.e("URL RESPONSE ERROR", e.getMessage().toString());
 		}
 		
 		return response;

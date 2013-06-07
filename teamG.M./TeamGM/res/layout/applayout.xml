@@ -20,7 +20,8 @@
             android:id="@+id/searchLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:paddingBottom="5dp" >
 
             <EditText
                 android:id="@+id/searchField"
@@ -46,14 +47,20 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:adjustViewBounds="false"
+                android:clickable="false"
+                android:cropToPadding="false"
+                android:duplicateParentState="false"
+                android:longClickable="false"
                 android:src="@drawable/starting" />
 
             <TextView
                 android:id="@+id/teamNameData"
                 style="@style/TeamName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:paddingLeft="10dp" />
 
