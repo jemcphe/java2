@@ -23,11 +23,7 @@ public class TeamProvider extends ContentProvider {
 		public static final String WIN_COLUMN = "won";
 		public static final String LOSS_COLUMN = "lost";
 
-		public static final String[] PROJECTION = { "_id", TEAM_COLUMN, WIN_COLUMN, LOSS_COLUMN };
-		
-		//Make class private
-		private TeamData() {};
-		
+
 	}
 	
 	@Override
