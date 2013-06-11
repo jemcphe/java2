@@ -30,11 +30,11 @@ public class TeamProvider extends ContentProvider {
 		public static final String LOSS_COLUMN = "lost";
 
 		// Define Columns for ESPN API
-//		public static final String TEAM_LOCATION = "location";
-//		public static final String TEAM_NAME = "name";
-//		public static final String TEAM_ABBREVIATION = "abbreviation";
+		public static final String TEAM_LOCATION = "location";
+		public static final String TEAM_NAME = "name";
+		public static final String TEAM_ABBREVIATION = "abbreviation";
 
-		public static final String[] PROJECTION = { "_id", TEAM_COLUMN, WIN_COLUMN, LOSS_COLUMN };
+		public static final String[] PROJECTION = { "_id", TEAM_LOCATION, TEAM_NAME, TEAM_ABBREVIATION };
 
 		//Make class private
 		private TeamData() {};
@@ -101,14 +101,14 @@ public class TeamProvider extends ContentProvider {
 		//Create Cursor
 		MatrixCursor result = new MatrixCursor(TeamData.PROJECTION);
 
-		String JSONString = FileInfo.readStringFile(getContext(), "teams.txt", true);
+		String JSONString = FileInfo.readStringFile(getContext(), "espn.txt", true);
 		JSONObject jsonObject = null;
 		JSONArray teamsArray = null;
 		JSONObject team = null;
 
 		try {
 			jsonObject = new JSONObject(JSONString);
-			teamsArray = jsonObject.getJSONArray(DataService.JSON_STANDING);
+			teamsArray = jsonObject.getJSONObject(DataService.ESPN_SPORTS).getJSONObject(DataService.ESPN_LEAGUES).getJSONArray(DataService.ESPN_TEAMS);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -127,8 +127,8 @@ public class TeamProvider extends ContentProvider {
 					team = teamsArray.getJSONObject(i);
 
 					//Add objects to the cursor
-					result.addRow(new Object[] { i + 1, team.get(DataService.JSON_TEAM), team.get(DataService.JSON_WINS), 
-							team.get(DataService.JSON_LOSSES)});
+					result.addRow(new Object[] { i + 1, team.get(DataService.ESPN_LOCATION), team.get(DataService.ESPN_NAME), 
+							team.get(DataService.ESPN_ABBREVIATION)});
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

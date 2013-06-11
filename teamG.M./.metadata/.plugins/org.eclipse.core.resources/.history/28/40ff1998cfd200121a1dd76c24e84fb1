@@ -78,7 +78,7 @@ public class DataService extends IntentService{
 		Log.i("URL RESPONSE", urlResponse);
 		//CREATE JSONARRAY & OBJECT FROM GATHERED DATA FROM URL
 		String JSONString = new String(urlResponse);
-		//JSONArray dataArray = new JSONArray();
+		JSONArray dataArray = new JSONArray();
 		//JSONObject json = new JSONObject(urlResponse);
 		//JSONObject results = json.getJSONObject("info");
 		//JSONObject results = json.getJSONObject(JSON_STANDING);

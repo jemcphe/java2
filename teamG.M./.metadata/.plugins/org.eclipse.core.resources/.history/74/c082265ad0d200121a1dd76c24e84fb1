@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
 								Log.i("Service Status", response);
 								
 								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
-								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
+								String teamData = FileInfo.readStringFile(_context, "espn.txt", true);
 								//CREATE JSONARRAY FROM FILE
 								_data = new JSONArray(teamData);
 								//CREATE JSONOBJECT FROM ARRAY INDEX

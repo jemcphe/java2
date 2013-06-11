@@ -30,9 +30,9 @@ public class TeamProvider extends ContentProvider {
 		public static final String LOSS_COLUMN = "lost";
 
 		// Define Columns for ESPN API
-//		public static final String TEAM_LOCATION = "location";
-//		public static final String TEAM_NAME = "name";
-//		public static final String TEAM_ABBREVIATION = "abbreviation";
+		public static final String TEAM_LOCATION = "location";
+		public static final String TEAM_NAME = "name";
+		public static final String TEAM_ABBREVIATION = "abbreviation";
 
 		public static final String[] PROJECTION = { "_id", TEAM_COLUMN, WIN_COLUMN, LOSS_COLUMN };
 

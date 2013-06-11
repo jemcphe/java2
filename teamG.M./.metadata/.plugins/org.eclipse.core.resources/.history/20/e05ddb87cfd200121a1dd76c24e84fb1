@@ -76,23 +76,27 @@ public class DataService extends IntentService{
 
 		//Create JSONObject & JSONArray from urlResponse
 		Log.i("URL RESPONSE", urlResponse);
-		//CREATE JSONARRAY & OBJECT FROM GATHERED DATA FROM URL
-		String JSONString = new String(urlResponse);
-		//JSONArray dataArray = new JSONArray();
-		//JSONObject json = new JSONObject(urlResponse);
-		//JSONObject results = json.getJSONObject("info");
-		//JSONObject results = json.getJSONObject(JSON_STANDING);
+		try {
+			//CREATE JSONARRAY & OBJECT FROM GATHERED DATA FROM URL
+			JSONArray dataArray = new JSONArray();
+			JSONObject json = new JSONObject(urlResponse);
+			//JSONObject results = json.getJSONObject("info");
+			JSONObject results = json.getJSONObject(JSON_STANDING);
 
-		//CREATE LOGS TO VERIFY CORRECT DATA IS PULLED
-		Log.i("TEAM DATA", JSONString);
-		//Log.i("TEST DATA GRAB", results.toString());
+			//CREATE LOGS TO VERIFY CORRECT DATA IS PULLED
+			Log.i("TEAM DATA", results.toString());
+			//Log.i("TEST DATA GRAB", results.toString());
 
-		//PLACE RESULTS INTO dataArray & LOG TO CONSOLE
-//			dataArray.put(results);
-//			Log.i("DATA ARRAY", dataArray.toString());
+			//PLACE RESULTS INTO dataArray & LOG TO CONSOLE
+			dataArray.put(results);
+			Log.i("DATA ARRAY", dataArray.toString());
 
-		//STORE DATA AS A .TXT FILE TO DEVICE
-		FileInfo.storeStringFile(this, "team.txt", JSONString, true);
+			//STORE DATA AS A .TXT FILE TO DEVICE
+			FileInfo.storeStringFile(this, "team.txt", dataArray.toString(), true);
+
+		} catch (JSONException e) {
+			Log.e("JSON", "JSON OBJECT EXCEPTION");
+		}
 
 		//Send data to handler
 		Message message = Message.obtain();
