@@ -11,6 +11,7 @@ import com.jemcphe.LayoutLib.TeamDisplay;
 import com.jemcphe.LayoutLib.TeamSearch;
 import com.jemcphe.LeagueLib.DataService;
 import com.jemcphe.LeagueLib.FileInfo;
+import com.jemcphe.LeagueLib.TeamProvider;
 import com.jemcphe.LeagueLib.WebData;
 import android.os.Bundle;
 import android.os.Handler;
@@ -128,7 +129,7 @@ public class MainActivity extends Activity {
 		
 		//DEFINE EDITTEXT FIELD
 		field = (EditText) findViewById(R.id.searchField);
-		
+		field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
 		//DEFINE THE SEARCH BUTTON
 		Button searchButton = (Button) findViewById(R.id.searchButton);
 
@@ -153,15 +154,15 @@ public class MainActivity extends Activity {
 								Log.i("Service Status", response);
 								
 								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
-								String teamData = FileInfo.readStringFile(_context, field.getText().toString(), true);
+								String teamData = FileInfo.readStringFile(_context, "standings.txt", true);
 								//CREATE JSONARRAY FROM FILE
 								_data = new JSONArray(teamData);
 								//CREATE JSONOBJECT FROM ARRAY INDEX
 								_teamObject = _data.getJSONObject(0);
 								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
-								updateData(_teamObject);
+								//updateData(_teamObject);
 								//SET THE TEAMLAYOUT VISIBILITY
-								_teamLayout.setVisibility(0);
+								//_teamLayout.setVisibility(0);
 							}
 							catch (Exception e){
 								/*

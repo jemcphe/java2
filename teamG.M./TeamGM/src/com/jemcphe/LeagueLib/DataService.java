@@ -21,6 +21,13 @@ public class DataService extends IntentService{
 	//CREATE CONSTANT STRINGS TO HOLD PASSED DATA
 	public static final String MESSENGER_KEY = "messenger";
 	public static final String TEAM_KEY = "team";
+	
+	//Static JSON String for pulled data
+	public static final String JSON_STANDING = "standing";
+	public static final String JSON_TEAM = "first_name";
+	public static final String JSON_WINS = "won";
+	public static final String JSON_LOSSES = "lost";
+	
 
 
 	public DataService() {
@@ -40,13 +47,14 @@ public class DataService extends IntentService{
 		 */
 		Bundle extras = intent.getExtras();
 		Messenger messenger = (Messenger) extras.get(MESSENGER_KEY);
-		String team = extras.getString(TEAM_KEY);
+		//String team = extras.getString(TEAM_KEY);
 
 		//Create URL
 		URL dataURL;
 		try {
 			//THIS URL IS CREATED BASED ON USER ENTRY FROM MAINACTIVITY
-			dataURL = new URL("https://jemcphe.cloudant.com/mlb/" + team);
+			//dataURL = new URL("https://jemcphe.cloudant.com/mlb/" + team);
+			dataURL = new URL("https://erikberg.com/mlb/standings.json");
 		} catch (MalformedURLException e) {
 			Log.e("BAD URL", "MALFORMED URL");
 			dataURL = null;
@@ -66,18 +74,19 @@ public class DataService extends IntentService{
 			//CREATE JSONARRAY & OBJECT FROM GATHERED DATA FROM URL
 			JSONArray dataArray = new JSONArray();
 			JSONObject json = new JSONObject(urlResponse);
-			JSONObject results = json.getJSONObject("info");
+			//JSONObject results = json.getJSONObject("info");
+			JSONObject results = json.getJSONObject(JSON_STANDING);
 
 			//CREATE LOGS TO VERIFY CORRECT DATA IS PULLED
 			Log.i("TEAM DATA", results.toString());
-			Log.i("TEST DATA GRAB", results.getString("location").toString());
+			//Log.i("TEST DATA GRAB", results.toString());
 
 			//PLACE RESULTS INTO dataArray & LOG TO CONSOLE
 			dataArray.put(results);
 			Log.i("DATA ARRAY", dataArray.toString());
 
 			//STORE DATA AS A .TXT FILE TO DEVICE
-			FileInfo.storeStringFile(this, team, dataArray.toString(), true);
+			FileInfo.storeStringFile(this, "standings.txt", dataArray.toString(), true);
 
 		} catch (JSONException e) {
 			Log.e("JSON", "JSON OBJECT EXCEPTION");
