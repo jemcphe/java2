@@ -198,43 +198,17 @@ public class MainActivity extends Activity {
 								String uriData = field.getText().toString();
 								
 								//Parse uri and use getContentResolver
-								Uri uri = Uri.parse(TeamProvider.TeamData.CONTENT_URI.toString());
+								Uri uri = Uri.parse(TeamProvider.TeamData.CONTENT_URI.toString() + uriData);
 								Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
-								if(dataCursor.moveToFirst() == true){
-									ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
-
-									for (int i = 0; i<dataCursor.getCount(); i++){
-										
-										//Create HashMap for data
-										HashMap<String, String> displayMap = new HashMap<String, String>();
-										displayMap.put("team", dataCursor.getString(1));
-										displayMap.put("wins", dataCursor.getString(2));
-										displayMap.put("losses", dataCursor.getString(3));
-										
-										dataCursor.moveToNext();
-										
-										teamList.add(displayMap);
-									}
-									
-									//Set up the Adapter
-									SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
-											new String[] {"team", "wins", "losses"}, new int[] {R.id.team, R.id.wins, R.id.losses});
-//									SimpleAdapter adapter = new SimpleAdapter(this, R.layout.list_row,
-//											new String[] {"team", "wins", "losses"}, 
-//											new int[] {R.id.team, R.id.wins, R.id.losses});
-									
-									//Instantiate the Adapter
-									listview.setAdapter(adapter);
-									
-								}
-//								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
-//								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
-//								//CREATE JSONARRAY FROM FILE
-//								_teamObject = new JSONObject(teamData);
-//								//CREATE JSONOBJECT FROM ARRAY INDEX
-//								_data = _teamObject.getJSONArray("standing");
-//								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
-//								updateData(_data);
+								Log.i("Content Resolver", dataCursor.toString());
+								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
+								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
+								//CREATE JSONARRAY FROM FILE
+								_teamObject = new JSONObject(teamData);
+								//CREATE JSONOBJECT FROM ARRAY INDEX
+								_data = _teamObject.getJSONArray("standing");
+								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
+								updateData(_data);
 								//SET THE TEAMLAYOUT VISIBILITY
 								//_teamLayout.setVisibility(0);
 							}

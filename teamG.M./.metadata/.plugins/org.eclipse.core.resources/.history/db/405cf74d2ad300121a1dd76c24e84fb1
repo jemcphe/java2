@@ -165,7 +165,6 @@ public class MainActivity extends Activity {
 		
 		//DEFINE EDITTEXT FIELD
 		field = (EditText) findViewById(R.id.searchField);
-		field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
 		//DEFINE THE SEARCH BUTTON
 		Button searchButton = (Button) findViewById(R.id.searchButton);
 		
@@ -198,7 +197,7 @@ public class MainActivity extends Activity {
 								String uriData = field.getText().toString();
 								
 								//Parse uri and use getContentResolver
-								Uri uri = Uri.parse(TeamProvider.TeamData.CONTENT_URI.toString());
+								Uri uri = Uri.parse(TeamProvider.TeamData.CONTENT_URI.toString() + uriData);
 								Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
 								if(dataCursor.moveToFirst() == true){
 									ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
