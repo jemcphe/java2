@@ -101,7 +101,7 @@ public class TeamProvider extends ContentProvider {
 		//Create Cursor
 		MatrixCursor result = new MatrixCursor(TeamData.PROJECTION);
 
-		String JSONString = FileInfo.readStringFile(getContext(), "teams.txt", true);
+		String JSONString = FileInfo.readStringFile(getContext(), "team.txt", true);
 		JSONObject jsonObject = null;
 		JSONArray teamsArray = null;
 		JSONObject team = null;

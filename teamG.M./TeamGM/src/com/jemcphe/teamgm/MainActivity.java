@@ -1,5 +1,6 @@
 package com.jemcphe.teamgm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -7,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.jemcphe.LayoutLib.SpinnerDisplay;
-import com.jemcphe.LayoutLib.TeamDisplay;
 import com.jemcphe.LayoutLib.TeamSearch;
 import com.jemcphe.LeagueLib.DataService;
 import com.jemcphe.LeagueLib.FileInfo;
@@ -28,7 +28,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -41,7 +43,7 @@ public class MainActivity extends Activity {
 	LinearLayout _teamLayout;
 	//Create Displays
 	TeamSearch _search;
-	TeamDisplay _teamDisplay;
+	//TeamDisplay _teamDisplay;
 	SpinnerDisplay _teamList;
 
 	//Declare Variables
@@ -60,6 +62,7 @@ public class MainActivity extends Activity {
 	JSONObject _teamObject;
 	ImageView _headerImage;
 	ImageView _startingImage;
+	ListView listview;
 
 	//TeamDisplay Variables for setting values
 	String _teamName;
@@ -74,23 +77,53 @@ public class MainActivity extends Activity {
 	String _right;
 	
 	//FUNCTION FOR UPDATING TEAM DATA ON THE SCREEN
-	public void updateData(JSONObject data){
-
+	public void updateData(JSONArray data){
+		Log.i("JSONArray data", data.toString());
+		ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
+		
 		try {
-			((TextView) findViewById(R.id.teamNameData)).setText(data.getString("location") + " " + data.getString("name"));
-			((TextView) findViewById(R.id.pitcherData)).setText(data.getString("pitcher"));
-			((TextView) findViewById(R.id.catcherData)).setText(data.getString("catcher"));
-			((TextView) findViewById(R.id.firstData)).setText(data.getString("first"));
-			((TextView) findViewById(R.id.secondData)).setText(data.getString("second"));
-			((TextView) findViewById(R.id.thirdData)).setText(data.getString("third"));
-			((TextView) findViewById(R.id.shortData)).setText(data.getString("short"));
-			((TextView) findViewById(R.id.leftData)).setText(data.getString("left"));
-			((TextView) findViewById(R.id.centerData)).setText(data.getString("center"));
-			((TextView) findViewById(R.id.rightData)).setText(data.getString("right"));
+			for(int i=0; i<data.length(); i++){
+				JSONObject teamObject = data.getJSONObject(i);
+				Log.i("JSONObject", teamObject.toString());
+				Log.i("JSONObject", teamObject.getString("first_name"));
+				String teamName = teamObject.getString("first_name") + " " + teamObject.getString("last_name");
+				String wins = teamObject.getString("won");
+				String losses = teamObject.getString("lost");
+				
+				//Create HashMap for data
+				HashMap<String, String> displayMap = new HashMap<String, String>();
+				displayMap.put("team", teamName);
+				displayMap.put("wins", wins);
+				displayMap.put("losses", losses);
+				
+				teamList.add(displayMap);
+			}
+			
+			//Set up the Adapter
+			SimpleAdapter adapter = new SimpleAdapter(this, teamList, R.layout.list_row,
+					new String[] {"team", "wins", "losses"}, 
+					new int[] {R.id.team, R.id.wins, R.id.losses});
+			
+			//Instantiate the Adapter
+			listview.setAdapter(adapter);
+				
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			Log.e("JSON ERROR", e.toString());
 		}
+		
+		//LEGACY GRIDLAYOUT
+//		((TextView) findViewById(R.id.teamNameData)).setText(data.getString("location") + " " + data.getString("name"));
+//		((TextView) findViewById(R.id.pitcherData)).setText(data.getString("pitcher"));
+//		((TextView) findViewById(R.id.catcherData)).setText(data.getString("catcher"));
+//		((TextView) findViewById(R.id.firstData)).setText(data.getString("first"));
+//		((TextView) findViewById(R.id.secondData)).setText(data.getString("second"));
+//		((TextView) findViewById(R.id.thirdData)).setText(data.getString("third"));
+//		((TextView) findViewById(R.id.shortData)).setText(data.getString("short"));
+//		((TextView) findViewById(R.id.leftData)).setText(data.getString("left"));
+//		((TextView) findViewById(R.id.centerData)).setText(data.getString("center"));
+//		((TextView) findViewById(R.id.rightData)).setText(data.getString("right"));
+		
 	}
 
 
@@ -132,7 +165,12 @@ public class MainActivity extends Activity {
 		field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
 		//DEFINE THE SEARCH BUTTON
 		Button searchButton = (Button) findViewById(R.id.searchButton);
-
+		
+		//Create the Listview
+		listview = (ListView) this.findViewById(R.id.list);
+		View listHeader = this.getLayoutInflater().inflate(R.layout.list_header, null);
+		listview.addHeaderView(listHeader);
+		
 		//CREATE AN ONCLICKLISTENER FOR SEARCH BUTTON THAT WILL CALL ON SERVICE CLASS
 		searchButton.setOnClickListener(new OnClickListener() {
 			@SuppressLint("HandlerLeak")
@@ -156,11 +194,11 @@ public class MainActivity extends Activity {
 								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
 								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
 								//CREATE JSONARRAY FROM FILE
-								_data = new JSONArray(teamData);
+								_teamObject = new JSONObject(teamData);
 								//CREATE JSONOBJECT FROM ARRAY INDEX
-								_teamObject = _data.getJSONObject(0);
+								_data = _teamObject.getJSONArray("standing");
 								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
-								//updateData(_teamObject);
+								updateData(_data);
 								//SET THE TEAMLAYOUT VISIBILITY
 								//_teamLayout.setVisibility(0);
 							}
