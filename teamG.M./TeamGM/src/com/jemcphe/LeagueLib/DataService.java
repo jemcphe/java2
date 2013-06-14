@@ -21,12 +21,15 @@ public class DataService extends IntentService{
 	//CREATE CONSTANT STRINGS TO HOLD PASSED DATA
 	public static final String MESSENGER_KEY = "messenger";
 	public static final String TEAM_KEY = "team";
+	public static final String CONFERENCE_KEY = "conference";
 	
 	//Static JSON String for pulled data from erikberg API
 	public static final String JSON_STANDING = "standing";
-	public static final String JSON_TEAM = "first_name";
+	public static final String JSON_FIRSTNAME = "first_name";
+	public static final String JSON_LASTNAME = "last_name";
 	public static final String JSON_WINS = "won";
 	public static final String JSON_LOSSES = "lost";
+	public static final String JSON_CONFERENCE = "conference";
 	
 	//Static JSON Strings for data pulled from ESPN
 //	public static final String ESPN_SPORTS = "sports";

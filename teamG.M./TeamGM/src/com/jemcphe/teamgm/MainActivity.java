@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
 	TextView dataBox;
 	TextView _teamData;
 	TextView _historyLabel;
-	static EditText field;
+	public static EditText field;
 	RadioGroup teamOptions;
 	String[] teamNames;
 	Boolean _connected = false;
@@ -78,12 +78,17 @@ public class MainActivity extends Activity {
 	String _left;
 	String _center;
 	String _right;
-	
+
+	public static String firstNameUri;
+	public static String lastNameUri;
+	public static String conferenceUri;
+
+
 	//FUNCTION FOR UPDATING TEAM DATA ON THE SCREEN
 	public void updateData(JSONArray data){
 		Log.i("JSONArray data", data.toString());
 		ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
-		
+
 		try {
 			for(int i=0; i<data.length(); i++){
 				JSONObject teamObject = data.getJSONObject(i);
@@ -92,41 +97,41 @@ public class MainActivity extends Activity {
 				String teamName = teamObject.getString("first_name") + " " + teamObject.getString("last_name");
 				String wins = teamObject.getString("won");
 				String losses = teamObject.getString("lost");
-				
+
 				//Create HashMap for data
 				HashMap<String, String> displayMap = new HashMap<String, String>();
 				displayMap.put("team", teamName);
 				displayMap.put("wins", wins);
 				displayMap.put("losses", losses);
-				
+
 				teamList.add(displayMap);
 			}
-			
+
 			//Set up the Adapter
 			SimpleAdapter adapter = new SimpleAdapter(this, teamList, R.layout.list_row,
 					new String[] {"team", "wins", "losses"}, 
 					new int[] {R.id.team, R.id.wins, R.id.losses});
-			
+
 			//Instantiate the Adapter
 			listview.setAdapter(adapter);
-				
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			Log.e("JSON ERROR", e.toString());
 		}
-		
+
 		//LEGACY GRIDLAYOUT
-//		((TextView) findViewById(R.id.teamNameData)).setText(data.getString("location") + " " + data.getString("name"));
-//		((TextView) findViewById(R.id.pitcherData)).setText(data.getString("pitcher"));
-//		((TextView) findViewById(R.id.catcherData)).setText(data.getString("catcher"));
-//		((TextView) findViewById(R.id.firstData)).setText(data.getString("first"));
-//		((TextView) findViewById(R.id.secondData)).setText(data.getString("second"));
-//		((TextView) findViewById(R.id.thirdData)).setText(data.getString("third"));
-//		((TextView) findViewById(R.id.shortData)).setText(data.getString("short"));
-//		((TextView) findViewById(R.id.leftData)).setText(data.getString("left"));
-//		((TextView) findViewById(R.id.centerData)).setText(data.getString("center"));
-//		((TextView) findViewById(R.id.rightData)).setText(data.getString("right"));
-		
+		//		((TextView) findViewById(R.id.teamNameData)).setText(data.getString("location") + " " + data.getString("name"));
+		//		((TextView) findViewById(R.id.pitcherData)).setText(data.getString("pitcher"));
+		//		((TextView) findViewById(R.id.catcherData)).setText(data.getString("catcher"));
+		//		((TextView) findViewById(R.id.firstData)).setText(data.getString("first"));
+		//		((TextView) findViewById(R.id.secondData)).setText(data.getString("second"));
+		//		((TextView) findViewById(R.id.thirdData)).setText(data.getString("third"));
+		//		((TextView) findViewById(R.id.shortData)).setText(data.getString("short"));
+		//		((TextView) findViewById(R.id.leftData)).setText(data.getString("left"));
+		//		((TextView) findViewById(R.id.centerData)).setText(data.getString("center"));
+		//		((TextView) findViewById(R.id.rightData)).setText(data.getString("right"));
+
 	}
 
 
@@ -135,13 +140,13 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		//SET THE MAIN VIEW
 		setContentView(R.layout.applayout);
-		
+
 		//HEADER IMAGE
 		_headerImage = (ImageView) findViewById(R.drawable.header);
-		
+
 		//UNIVERSAL CONTEXT VARIABLE
 		_context = this;
-		
+
 		//DEFINE LAYOUT THAT WILL HOLD TEAM DATA
 		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
 
@@ -162,18 +167,18 @@ public class MainActivity extends Activity {
 
 		//Create LinearLayout for Main Layout
 		_mainLayout = (LinearLayout) findViewById(R.layout.applayout);
-		
+
 		//DEFINE EDITTEXT FIELD
 		field = (EditText) findViewById(R.id.searchField);
-		field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
+		//field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
 		//DEFINE THE SEARCH BUTTON
 		Button searchButton = (Button) findViewById(R.id.searchButton);
-		
+
 		//Create the Listview
 		listview = (ListView) this.findViewById(R.id.list);
 		View listHeader = this.getLayoutInflater().inflate(R.layout.list_header, null);
 		listview.addHeaderView(listHeader);
-		
+
 		//CREATE AN ONCLICKLISTENER FOR SEARCH BUTTON THAT WILL CALL ON SERVICE CLASS
 		searchButton.setOnClickListener(new OnClickListener() {
 			@SuppressLint("HandlerLeak")
@@ -188,53 +193,96 @@ public class MainActivity extends Activity {
 						String response = null;
 						//CHECK FOR PROPER SERVICE COMPLETION
 						if (msg.arg1 == RESULT_OK) {
-							
+
 							try {
 								//TELL DEBUGGER THAT SERVICE HAS FINISHED
 								response = "Service Finished";
 								Log.i("Service Status", response);
-								
-								//Create a string to hold URI manipulation
-								String uriData = field.getText().toString();
-								
-								//Parse uri and use getContentResolver
-								Uri uri = Uri.parse(TeamProvider.TeamData.CONTENT_URI.toString());
-								Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
-								if(dataCursor.moveToFirst() == true){
-									ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
 
-									for (int i = 0; i<dataCursor.getCount(); i++){
-										
-										//Create HashMap for data
-										HashMap<String, String> displayMap = new HashMap<String, String>();
-										displayMap.put("team", dataCursor.getString(1));
-										displayMap.put("wins", dataCursor.getString(2));
-										displayMap.put("losses", dataCursor.getString(3));
-										
-										dataCursor.moveToNext();
-										
-										teamList.add(displayMap);
+								//Create a string to hold URI manipulation
+								String firstNameUri = TeamProvider.TeamData.TEAM_NAME_URI.toString() + field.getText().toString();
+								String lastNameUri = TeamProvider.TeamData.TEAM_NAME_URI.toString() + field.getText().toString();
+								String conferenceUri = TeamProvider.TeamData.CONFERENCE_URI.toString() + field.getText().toString();
+								
+								if(firstNameUri != null){
+									//Parse uri and use getContentResolver
+									Uri uri = Uri.parse(firstNameUri);
+									Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
+
+									if(dataCursor.moveToFirst() == true){
+										ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
+
+										for (int i = 0; i<dataCursor.getCount(); i++){
+
+											//Create HashMap for data
+											HashMap<String, String> displayMap = new HashMap<String, String>();
+											displayMap.put("team", dataCursor.getString(1));
+											displayMap.put("conference", dataCursor.getString(2));
+											displayMap.put("wins", dataCursor.getString(3));
+											displayMap.put("losses", dataCursor.getString(4));
+
+											dataCursor.moveToNext();
+
+											teamList.add(displayMap);
+										}
+
+										//Set up the Adapter
+										SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
+												new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
+										//									SimpleAdapter adapter = new SimpleAdapter(this, R.layout.list_row,
+										//											new String[] {"team", "wins", "losses"}, 
+										//											new int[] {R.id.team, R.id.wins, R.id.losses});
+
+										//Instantiate the Adapter
+										listview.setAdapter(adapter);
+
 									}
-									
-									//Set up the Adapter
-									SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
-											new String[] {"team", "wins", "losses"}, new int[] {R.id.team, R.id.wins, R.id.losses});
-//									SimpleAdapter adapter = new SimpleAdapter(this, R.layout.list_row,
-//											new String[] {"team", "wins", "losses"}, 
-//											new int[] {R.id.team, R.id.wins, R.id.losses});
-									
-									//Instantiate the Adapter
-									listview.setAdapter(adapter);
-									
 								}
-//								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
-//								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
-//								//CREATE JSONARRAY FROM FILE
-//								_teamObject = new JSONObject(teamData);
-//								//CREATE JSONOBJECT FROM ARRAY INDEX
-//								_data = _teamObject.getJSONArray("standing");
-//								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
-//								updateData(_data);
+								
+								
+								
+//								if(conferenceUri != null){
+//									//Parse uri and use getContentResolver
+//									Uri uri = Uri.parse(conferenceUri);
+//									Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
+//
+//									if(dataCursor.moveToFirst() == true){
+//										ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
+//
+//										for (int i = 0; i<dataCursor.getCount(); i++){
+//
+//											//Create HashMap for data
+//											HashMap<String, String> displayMap = new HashMap<String, String>();
+//											displayMap.put("team", dataCursor.getString(1));
+//											displayMap.put("conference", dataCursor.getString(2));
+//											displayMap.put("wins", dataCursor.getString(3));
+//											displayMap.put("losses", dataCursor.getString(4));
+//
+//											dataCursor.moveToNext();
+//
+//											teamList.add(displayMap);
+//										}
+//
+//										//Set up the Adapter
+//										SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
+//												new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
+//										//									SimpleAdapter adapter = new SimpleAdapter(this, R.layout.list_row,
+//										//											new String[] {"team", "wins", "losses"}, 
+//										//											new int[] {R.id.team, R.id.wins, R.id.losses});
+//
+//										//Instantiate the Adapter
+//										listview.setAdapter(adapter);
+//
+//									}
+//								}
+								//								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
+								//								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
+								//								//CREATE JSONARRAY FROM FILE
+								//								_teamObject = new JSONObject(teamData);
+								//								//CREATE JSONOBJECT FROM ARRAY INDEX
+								//								_data = _teamObject.getJSONArray("standing");
+								//								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
+								//								updateData(_data);
 								//SET THE TEAMLAYOUT VISIBILITY
 								//_teamLayout.setVisibility(0);
 							}
@@ -251,7 +299,7 @@ public class MainActivity extends Activity {
 						}	
 					}
 				};
-				
+
 				//CHECK FOR USER ENTRY IN EDITTEXT FIELD
 				if(field.getText().toString().length() == 0){
 					//TELL USER TO ENTER A TEAM
@@ -260,7 +308,7 @@ public class MainActivity extends Activity {
 				} else {
 					//CREATE MESSENGER
 					Messenger dataMessenger = new Messenger(dataHandler);
-					
+
 					/*
 					 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
 					 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
@@ -274,6 +322,13 @@ public class MainActivity extends Activity {
 		});      
 	}
 
+	public static String getUri() {
+		String result = null;
+
+
+
+		return result;
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -282,24 +337,24 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-/********************************** LEGACY CODE ***********************************/
-//	@SuppressWarnings("unused")
-//	private void getTeam(String team){
-//		Log.i("CLICK: ", "Get Team Initiated");
-//		//String baseURL = "http://jemcphe.cloudant.com/mlb/" + team;
-//		//String baseURL = "https://erikberg.com/mlb/standings.json";
-//		//Create URL to pass to TeamRequest
-//		URL baseURL;
-//		try {
-//			baseURL = new URL("http://jemcphe.cloudant.com/mlb/" + team);
-//			//			finalURL = new URL(baseURL);
-//			//			TeamRequest tr = new TeamRequest();
-//			//			tr.execute(finalURL);
-//		} catch (MalformedURLException e) {
-//			Log.e("BAD URL", "MALFORMED URL");
-//			baseURL = null;
-//		}
-//	}
+	/********************************** LEGACY CODE ***********************************/
+	//	@SuppressWarnings("unused")
+	//	private void getTeam(String team){
+	//		Log.i("CLICK: ", "Get Team Initiated");
+	//		//String baseURL = "http://jemcphe.cloudant.com/mlb/" + team;
+	//		//String baseURL = "https://erikberg.com/mlb/standings.json";
+	//		//Create URL to pass to TeamRequest
+	//		URL baseURL;
+	//		try {
+	//			baseURL = new URL("http://jemcphe.cloudant.com/mlb/" + team);
+	//			//			finalURL = new URL(baseURL);
+	//			//			TeamRequest tr = new TeamRequest();
+	//			//			tr.execute(finalURL);
+	//		} catch (MalformedURLException e) {
+	//			Log.e("BAD URL", "MALFORMED URL");
+	//			baseURL = null;
+	//		}
+	//	}
 
 
 	//    public void readFile(String team) throws IOException, JSONException{
@@ -334,42 +389,42 @@ public class MainActivity extends Activity {
 	//    }
 
 
-//	private class TeamRequest extends AsyncTask<URL, Void, String>{
-//		@Override
-//		protected String doInBackground(URL... urls){
-//			String response = "";
-//			for(URL url: urls){
-//				response = WebData.getURLStringResponse(url);
-//			}
-//			return response;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(String result){
-//			//JSON DATA RETRIEVED, Now set TeamDisplay strings
-//			Log.i("URL RESPONSE", result);
-//			try {
-//				JSONArray dataArray = new JSONArray();
-//				JSONObject json = new JSONObject(result);
-//				JSONObject results = json.getJSONObject("info");
-//
-//				Toast toast = Toast.makeText(_context, results.getString("name") + " data displayed & stored to device",  Toast.LENGTH_SHORT);
-//				toast.show();
-//				Log.i("TEAM DATA", results.toString());
-//				Log.i("TEST DATA GRAB", results.getString("location").toString());
-//				updateData(results);
-//				dataArray.put(results);
-//				//					_history.put(results.getString("name"), results.toString());
-//				//					FileInfo.storeObjectFile(_context, "history", _history, true);
-//				//					FileInfo.storeStringFile(_context, "temp", results.toString(), true);
-//
-//			} catch (JSONException e) {
-//				Toast toast = Toast.makeText(_context, "Invalid Team Entry. Please Try Again.", Toast.LENGTH_LONG);
-//				toast.show();
-//				Log.e("JSON", "JSON OBJECT EXCEPTION");
-//			}
-//		}
-//	}
+	//	private class TeamRequest extends AsyncTask<URL, Void, String>{
+	//		@Override
+	//		protected String doInBackground(URL... urls){
+	//			String response = "";
+	//			for(URL url: urls){
+	//				response = WebData.getURLStringResponse(url);
+	//			}
+	//			return response;
+	//		}
+	//
+	//		@Override
+	//		protected void onPostExecute(String result){
+	//			//JSON DATA RETRIEVED, Now set TeamDisplay strings
+	//			Log.i("URL RESPONSE", result);
+	//			try {
+	//				JSONArray dataArray = new JSONArray();
+	//				JSONObject json = new JSONObject(result);
+	//				JSONObject results = json.getJSONObject("info");
+	//
+	//				Toast toast = Toast.makeText(_context, results.getString("name") + " data displayed & stored to device",  Toast.LENGTH_SHORT);
+	//				toast.show();
+	//				Log.i("TEAM DATA", results.toString());
+	//				Log.i("TEST DATA GRAB", results.getString("location").toString());
+	//				updateData(results);
+	//				dataArray.put(results);
+	//				//					_history.put(results.getString("name"), results.toString());
+	//				//					FileInfo.storeObjectFile(_context, "history", _history, true);
+	//				//					FileInfo.storeStringFile(_context, "temp", results.toString(), true);
+	//
+	//			} catch (JSONException e) {
+	//				Toast toast = Toast.makeText(_context, "Invalid Team Entry. Please Try Again.", Toast.LENGTH_LONG);
+	//				toast.show();
+	//				Log.e("JSON", "JSON OBJECT EXCEPTION");
+	//			}
+	//		}
+	//	}
 
 
 	//	@SuppressWarnings({"rawtypes" })

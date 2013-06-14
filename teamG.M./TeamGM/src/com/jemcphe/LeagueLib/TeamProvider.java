@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.jemcphe.teamgm.MainActivity;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -11,6 +13,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 public class TeamProvider extends ContentProvider {
 
@@ -19,13 +22,15 @@ public class TeamProvider extends ContentProvider {
 
 	public static class TeamData implements BaseColumns {
 		//Create URI Definitions
-		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/teams");
-
+		public static final Uri TEAM_NAME_URI = Uri.parse("content://" + AUTHORITY + "/teams/firstname/");
+		public static final Uri CONFERENCE_URI = Uri.parse("content://" + AUTHORITY + "/teams/conference/");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jemcphe.teamgm.team";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item /vnd.jemcphe.teamgm.team";
 
 		// Define Columns for erikberg API
-		public static final String TEAM_COLUMN = "first_name";
+		public static final String TEAM_FIRST_NAME_COLUMN = "first_name";
+		public static final String TEAM_LAST_NAME_COLUMN = "last_name";
+		public static final String TEAM_CONFERENCE_COLUMN = "conference";
 		public static final String WIN_COLUMN = "won";
 		public static final String LOSS_COLUMN = "lost";
 
@@ -34,7 +39,7 @@ public class TeamProvider extends ContentProvider {
 //		public static final String TEAM_NAME = "name";
 //		public static final String TEAM_ABBREVIATION = "abbreviation";
 
-		public static final String[] PROJECTION = { "_id", TEAM_COLUMN, WIN_COLUMN, LOSS_COLUMN };
+		public static final String[] PROJECTION = { "_id", TEAM_FIRST_NAME_COLUMN, TEAM_CONFERENCE_COLUMN, WIN_COLUMN, LOSS_COLUMN };
 
 		//Make class private
 		private TeamData() {};
@@ -42,16 +47,18 @@ public class TeamProvider extends ContentProvider {
 	}
 
 	//Define Teams collected from JSON
-	public static final int TEAMS = 1;
-	public static final int TEAMS_ID = 2;
+	public static final int TEAMS_FIRST_NAME_FILTER = 1;
+	public static final int TEAMS_LAST_NAME_FILTER = 2;
+	public static final int TEAMS_CONFERENCE_FILTER = 3;
 
 	//Create URI Matcher
 	private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 	//Setup the URI's
 	static {
-		uriMatcher.addURI(AUTHORITY, "teams/", TEAMS);
-		uriMatcher.addURI(AUTHORITY, "teams/#", TEAMS_ID);
+		uriMatcher.addURI(AUTHORITY, "teams/firstname/*", TEAMS_FIRST_NAME_FILTER);
+		uriMatcher.addURI(AUTHORITY, "teams/lastname/*", TEAMS_LAST_NAME_FILTER);
+		uriMatcher.addURI(AUTHORITY, "teams/conference/*", TEAMS_CONFERENCE_FILTER);
 	}
 
 	@Override
@@ -66,12 +73,10 @@ public class TeamProvider extends ContentProvider {
 
 		//Test for which uri is entered
 		switch (uriMatcher.match(uri)) {
-		case TEAMS:
-			return TeamData.CONTENT_TYPE;
-
-		case TEAMS_ID:
-			return TeamData.CONTENT_ITEM_TYPE;
-
+		case TEAMS_FIRST_NAME_FILTER:
+		case TEAMS_LAST_NAME_FILTER:
+		case TEAMS_CONFERENCE_FILTER:
+			return TeamData.CONTENT_ITEM_TYPE;			
 		default:
 			break;
 		}
@@ -119,27 +124,111 @@ public class TeamProvider extends ContentProvider {
 
 		//Test for which uri is entered
 		switch (uriMatcher.match(uri)) {
-		case TEAMS:
-
+		case TEAMS_FIRST_NAME_FILTER:
+			
+			String firstNameRequested = uri.getLastPathSegment();
+			
+			MainActivity.firstNameUri = TeamProvider.TeamData.TEAM_NAME_URI.toString() + MainActivity.field.getText().toString();
+			
 			//Loop through all JSON Data
 			for(int i = 0; i<teamsArray.length(); i++){
 				try {
 					team = teamsArray.getJSONObject(i);
-
-					//Add objects to the cursor
-					result.addRow(new Object[] { i + 1, team.get(DataService.JSON_TEAM), team.get(DataService.JSON_WINS), 
-							team.get(DataService.JSON_LOSSES)});
+					if(team.getString(DataService.JSON_FIRSTNAME).contentEquals(firstNameRequested)){
+						//Add objects to the cursor
+						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
+								team.get(DataService.JSON_LOSSES)});
+					}
+					
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			
+			
+//			//Loop through all JSON Data
+//			for(int i = 0; i<teamsArray.length(); i++){
+//				try {
+//					team = teamsArray.getJSONObject(i);
+//
+//					//Add objects to the cursor
+//					result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
+//							team.get(DataService.JSON_LOSSES)});
+//
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 
 			break;
-		case TEAMS_ID:
+		case TEAMS_LAST_NAME_FILTER:
+			
+			String lastNameRequested = uri.getLastPathSegment();
+			
+			//Loop through all JSON Data
+			for(int i = 0; i<teamsArray.length(); i++){
+				try {
+					team = teamsArray.getJSONObject(i);
+					Log.i("CONFERENCE FILTER", team.toString());
+					if(team.getString(DataService.JSON_LASTNAME).contentEquals(lastNameRequested)){
+						//Add objects to the cursor
+						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_LASTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
+								team.get(DataService.JSON_LOSSES)});
+					}
+					
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			
+			
+//			//Loop through all JSON Data
+//			for(int i = 0; i<teamsArray.length(); i++){
+//				try {
+//					team = teamsArray.getJSONObject(i);
+//
+//					//Add objects to the cursor
+//					result.addRow(new Object[] { i + 1, team.get(DataService.JSON_LASTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
+//							team.get(DataService.JSON_LOSSES)});
+//
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 
 			break;
+		case TEAMS_CONFERENCE_FILTER:
+			
+			String conferenceRequested = uri.getLastPathSegment();
+			
+			//Loop through all JSON Data
+			for(int i = 0; i<teamsArray.length(); i++){
+				try {
+					team = teamsArray.getJSONObject(i);
+					Log.i("CONFERENCE FILTER", team.toString());
+					if(team.getString(DataService.JSON_CONFERENCE).contentEquals(conferenceRequested)){
+						//Add objects to the cursor
+						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
+								team.get(DataService.JSON_LOSSES)});
+					}
+					
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			
+			break;
+
 		default:
 			break;
 		}
