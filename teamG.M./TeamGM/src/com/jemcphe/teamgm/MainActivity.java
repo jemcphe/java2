@@ -199,14 +199,9 @@ public class MainActivity extends Activity {
 								response = "Service Finished";
 								Log.i("Service Status", response);
 
-								//Create a string to hold URI manipulation
-								String firstNameUri = TeamProvider.TeamData.TEAM_NAME_URI.toString() + field.getText().toString();
-								String lastNameUri = TeamProvider.TeamData.TEAM_NAME_URI.toString() + field.getText().toString();
-								String conferenceUri = TeamProvider.TeamData.CONFERENCE_URI.toString() + field.getText().toString();
-								
-								if(firstNameUri != null){
 									//Parse uri and use getContentResolver
-									Uri uri = Uri.parse(firstNameUri);
+									String uriString = TeamProvider.TeamData.TEAM_NAME_URI.toString() + field.getText().toString();
+									Uri uri = Uri.parse(uriString);
 									Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
 
 									if(dataCursor.moveToFirst() == true){
@@ -229,52 +224,11 @@ public class MainActivity extends Activity {
 										//Set up the Adapter
 										SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
 												new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
-										//									SimpleAdapter adapter = new SimpleAdapter(this, R.layout.list_row,
-										//											new String[] {"team", "wins", "losses"}, 
-										//											new int[] {R.id.team, R.id.wins, R.id.losses});
-
 										//Instantiate the Adapter
 										listview.setAdapter(adapter);
 
 									}
-								}
 								
-								
-								
-//								if(conferenceUri != null){
-//									//Parse uri and use getContentResolver
-//									Uri uri = Uri.parse(conferenceUri);
-//									Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
-//
-//									if(dataCursor.moveToFirst() == true){
-//										ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
-//
-//										for (int i = 0; i<dataCursor.getCount(); i++){
-//
-//											//Create HashMap for data
-//											HashMap<String, String> displayMap = new HashMap<String, String>();
-//											displayMap.put("team", dataCursor.getString(1));
-//											displayMap.put("conference", dataCursor.getString(2));
-//											displayMap.put("wins", dataCursor.getString(3));
-//											displayMap.put("losses", dataCursor.getString(4));
-//
-//											dataCursor.moveToNext();
-//
-//											teamList.add(displayMap);
-//										}
-//
-//										//Set up the Adapter
-//										SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
-//												new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
-//										//									SimpleAdapter adapter = new SimpleAdapter(this, R.layout.list_row,
-//										//											new String[] {"team", "wins", "losses"}, 
-//										//											new int[] {R.id.team, R.id.wins, R.id.losses});
-//
-//										//Instantiate the Adapter
-//										listview.setAdapter(adapter);
-//
-//									}
-//								}
 								//								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
 								//								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
 								//								//CREATE JSONARRAY FROM FILE
@@ -320,14 +274,6 @@ public class MainActivity extends Activity {
 				}
 			}
 		});      
-	}
-
-	public static String getUri() {
-		String result = null;
-
-
-
-		return result;
 	}
 
 	@Override
