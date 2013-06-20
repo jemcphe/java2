@@ -7,6 +7,8 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.devspark.appmsg.AppMsg;
 import com.jemcphe.LayoutLib.SpinnerDisplay;
 import com.jemcphe.LayoutLib.TeamSearch;
 import com.jemcphe.LeagueLib.DataService;
@@ -49,6 +51,7 @@ public class MainActivity extends Activity {
 	//TeamDisplay _teamDisplay;
 	SpinnerDisplay _teamList;
 
+	
 	//Declare Variables
 	ScrollView _scrollView;
 	TextView _searchLabel;
@@ -184,93 +187,100 @@ public class MainActivity extends Activity {
 			@SuppressLint("HandlerLeak")
 			@Override
 			public void onClick(View v) {
+				
 				//HANDLE DATA FROM SERVICE
-				Handler dataHandler = new Handler() {
-
-					@Override
-					public void handleMessage(Message msg) {
-						// TODO Auto-generated method stub
-						String response = null;
-						//CHECK FOR PROPER SERVICE COMPLETION
-						if (msg.arg1 == RESULT_OK) {
-
-							try {
-								//TELL DEBUGGER THAT SERVICE HAS FINISHED
-								response = "Service Finished";
-								Log.i("Service Status", response);
-
-									//Parse uri and use getContentResolver
-									String uriString = TeamProvider.TeamData.TEAM_NAME_URI.toString() + field.getText().toString();
-									Uri uri = Uri.parse(uriString);
-									Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
-
-									if(dataCursor.moveToFirst() == true){
-										ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
-
-										for (int i = 0; i<dataCursor.getCount(); i++){
-
-											//Create HashMap for data
-											HashMap<String, String> displayMap = new HashMap<String, String>();
-											displayMap.put("team", dataCursor.getString(1));
-											displayMap.put("conference", dataCursor.getString(2));
-											displayMap.put("wins", dataCursor.getString(3));
-											displayMap.put("losses", dataCursor.getString(4));
-
-											dataCursor.moveToNext();
-
-											teamList.add(displayMap);
-										}
-
-										//Set up the Adapter
-										SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
-												new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
-										//Instantiate the Adapter
-										listview.setAdapter(adapter);
-
-									}
-								
-								//								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
-								//								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
-								//								//CREATE JSONARRAY FROM FILE
-								//								_teamObject = new JSONObject(teamData);
-								//								//CREATE JSONOBJECT FROM ARRAY INDEX
-								//								_data = _teamObject.getJSONArray("standing");
-								//								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
-								//								updateData(_data);
-								//SET THE TEAMLAYOUT VISIBILITY
-								//_teamLayout.setVisibility(0);
-							}
-							catch (Exception e){
-								/*
-								 * TELL THE USER THAT THEY NEED ENTERED AN INVALID TEAM NAME
-								 * OR THEY NEED TO BE CONNECTED TO INTERNET FOR TEAM INFORMATION
-								 */
-								Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
-								toast.show();
-
-								Log.e("", e.getMessage().toString());
-							}
-						}	
-					}
-				};
+//				Handler dataHandler = new Handler() {
+//
+//					@Override
+//					public void handleMessage(Message msg) {
+//						// TODO Auto-generated method stub
+//						String response = null;
+//						//CHECK FOR PROPER SERVICE COMPLETION
+//						if (msg.arg1 == RESULT_OK) {
+//
+//							try {
+//								//TELL DEBUGGER THAT SERVICE HAS FINISHED
+//								response = "Service Finished";
+//								Log.i("Service Status", response);
+//
+//									//Parse uri and use getContentResolver
+//									String uriString = TeamProvider.TeamData.TEAM_NAME_URI.toString() + field.getText().toString();
+//									Uri uri = Uri.parse(uriString);
+//									Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
+//
+//									if(dataCursor.moveToFirst() == true){
+//										ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
+//
+//										for (int i = 0; i<dataCursor.getCount(); i++){
+//
+//											//Create HashMap for data
+//											HashMap<String, String> displayMap = new HashMap<String, String>();
+//											displayMap.put("team", dataCursor.getString(1));
+//											displayMap.put("conference", dataCursor.getString(2));
+//											displayMap.put("wins", dataCursor.getString(3));
+//											displayMap.put("losses", dataCursor.getString(4));
+//
+//											dataCursor.moveToNext();
+//
+//											teamList.add(displayMap);
+//										}
+//
+//										//Set up the Adapter
+//										SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
+//												new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
+//										//Instantiate the Adapter
+//										listview.setAdapter(adapter);
+//
+//									}
+//								
+//								//								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
+//								//								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
+//								//								//CREATE JSONARRAY FROM FILE
+//								//								_teamObject = new JSONObject(teamData);
+//								//								//CREATE JSONOBJECT FROM ARRAY INDEX
+//								//								_data = _teamObject.getJSONArray("standing");
+//								//								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
+//								//								updateData(_data);
+//								//SET THE TEAMLAYOUT VISIBILITY
+//								//_teamLayout.setVisibility(0);
+//							}
+//							catch (Exception e){
+//								/*
+//								 * TELL THE USER THAT THEY NEED ENTERED AN INVALID TEAM NAME
+//								 * OR THEY NEED TO BE CONNECTED TO INTERNET FOR TEAM INFORMATION
+//								 */
+//								Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
+//								toast.show();
+//
+//								Log.e("", e.getMessage().toString());
+//							}
+//						}	
+//					}
+//				};
 
 				//CHECK FOR USER ENTRY IN EDITTEXT FIELD
 				if(field.getText().toString().length() == 0){
 					//TELL USER TO ENTER A TEAM
+					
+					//AppMsg toast = AppMsg.makeText(MainActivity.this, "Please Enter A Team Name", AppMsg.STYLE_ALERT);					
 					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
 					toast.show();
 				} else {
-					//CREATE MESSENGER
-					Messenger dataMessenger = new Messenger(dataHandler);
-
-					/*
-					 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
-					 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
-					 */
-					Intent dataIntent = new Intent(_context, DataService.class);
-					dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
-					dataIntent.putExtra(DataService.TEAM_KEY, field.getText().toString());
-					startService(dataIntent);
+					//Create intent to present DisplayActivity.java
+					Intent displayIntent = new Intent(_context, DisplayActivity.class);
+					startActivity(displayIntent);
+					
+//					//CREATE MESSENGER
+//					Messenger dataMessenger = new Messenger(dataHandler);
+//
+//					/*
+//					 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
+//					 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
+//					 */
+//					Intent dataIntent = new Intent(_context, DataService.class);
+//					dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
+//					dataIntent.putExtra(DataService.TEAM_KEY, field.getText().toString());
+//					startService(dataIntent);
 				}
 			}
 		});      
