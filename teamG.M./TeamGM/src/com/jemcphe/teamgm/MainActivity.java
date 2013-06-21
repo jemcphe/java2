@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import com.jemcphe.LayoutLib.SpinnerDisplay;
 import com.jemcphe.LayoutLib.TeamSearch;
+import com.jemcphe.LeagueLib.DataService;
+import com.jemcphe.LeagueLib.FileInfo;
 import com.jemcphe.LeagueLib.WebData;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -35,7 +37,8 @@ public class MainActivity extends Activity {
 	//Create Linear Layouts
 	LinearLayout _mainLayout;
 	LinearLayout _historyLayout;
-	LinearLayout _teamLayout;
+	//LinearLayout _teamLayout;
+	LinearLayout _teamDataLayout;
 	//Create Displays
 	TeamSearch _search;
 	//TeamDisplay _teamDisplay;
@@ -153,7 +156,7 @@ public class MainActivity extends Activity {
 		_context = this;
 
 		//DEFINE LAYOUT THAT WILL HOLD TEAM DATA
-		_teamLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
+		_teamDataLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
 
 		//Determine data connection
 		_connected = WebData.getConnectionStatus(_context);
@@ -179,10 +182,10 @@ public class MainActivity extends Activity {
 		//DEFINE THE SEARCH BUTTON
 		Button searchButton = (Button) findViewById(R.id.searchButton);
 
-		//Create the Listview
-		listview = (ListView) this.findViewById(R.id.list);
-		View listHeader = this.getLayoutInflater().inflate(R.layout.list_header, null);
-		listview.addHeaderView(listHeader);
+//		//Create the Listview
+//		listview = (ListView) this.findViewById(R.id.list);
+//		View listHeader = this.getLayoutInflater().inflate(R.layout.list_header, null);
+//		listview.addHeaderView(listHeader);
 
 		//CREATE AN ONCLICKLISTENER FOR SEARCH BUTTON THAT WILL CALL ON SERVICE CLASS
 		searchButton.setOnClickListener(new OnClickListener() {
@@ -208,9 +211,67 @@ public class MainActivity extends Activity {
 
 				}
 			}
-		});      
+		}); 
+		
+		getTeam();
+		
 	}
 
+	
+	public void getTeam() {
+		
+		Bundle teamData = getIntent().getExtras();
+		
+		if(teamData != null){
+			String teamRequested = teamData.getString("team");
+			Log.i("Team Requested", teamRequested);
+			String JSONString = FileInfo.readStringFile(_context, "team.txt", true);
+			JSONObject jsonObject = null;
+			JSONArray teamsArray = null;
+			JSONObject team = null;
+			
+			try {
+				jsonObject = new JSONObject(JSONString);
+				teamsArray = jsonObject.getJSONArray(DataService.JSON_STANDING);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			//Loop through all JSON Data
+			for(int i = 0; i<teamsArray.length(); i++){
+				try {
+					team = teamsArray.getJSONObject(i);
+					if(team.getString(DataService.JSON_FIRSTNAME).contentEquals(teamRequested)){
+						String teamName = team.getString("first_name") + " " + team.getString("last_name");
+						String conference = team.getString("conference");
+						String gamesPlayed = team.getString("games_played");
+						String rank = team.getString("ordinal_rank");
+						String record = team.getString("won") + " - " + team.getString("lost");
+						String streak = team.getString("streak");
+						String average = team.getString("win_percentage");
+						Log.i("TEAM NAME JSON", teamName);
+
+						((TextView) findViewById(R.id.teamNameData)).setText(teamName);
+						((TextView) findViewById(R.id.conferenceData)).setText(conference);
+						((TextView) findViewById(R.id.rankData)).setText(rank);
+						((TextView) findViewById(R.id.gamesPlayedData)).setText(gamesPlayed);
+						((TextView) findViewById(R.id.recordData)).setText(record);
+						((TextView) findViewById(R.id.streakData)).setText(streak);
+						((TextView) findViewById(R.id.averageData)).setText(average);
+						
+						_teamDataLayout.setVisibility(0);
+
+						//Add objects to the cursor
+						//						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
+						//								team.get(DataService.JSON_LOSSES)});
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}	
+	}
 	
 	//Check for orientation change and save necessary data
 	@Override

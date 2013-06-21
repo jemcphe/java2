@@ -20,6 +20,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -83,6 +84,26 @@ public class DisplayActivity extends SherlockActivity {
 		_listView = (ListView) this.findViewById(R.id.displayList);
 		View listHeader = this.getLayoutInflater().inflate(R.layout.list_header, null);
 		_listView.addHeaderView(listHeader);
+		
+		_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				
+				HashMap<String, String> dataMap = (HashMap<String, String>) _listView.getItemAtPosition(arg2);
+				String testString = dataMap.get("team");
+				Log.i("ITEM SELECTED", testString);
+				Intent selectedIntent = new Intent(_context, MainActivity.class);
+				selectedIntent.putExtra("team", dataMap.get("team"));
+				
+				startActivity(selectedIntent);
+				
+			}
+
+		});
 
 		//Launch startService
 		startService();
