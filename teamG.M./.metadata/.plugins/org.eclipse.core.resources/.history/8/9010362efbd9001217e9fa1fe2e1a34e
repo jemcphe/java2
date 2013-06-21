@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/apiButton"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:text="See Where Data Is From" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Back To Main" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Display Info Here!!!"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/displayList"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:layout_weight="0.02"
+        android:divider="#ffffff"
+        android:drawSelectorOnTop="false" />
+
+    <!--
+         <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+
+    </LinearLayout>
+    -->
+
+</LinearLayout>

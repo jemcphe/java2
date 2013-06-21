@@ -26,7 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.jemcphe.teamgm.DisplayActivity" >
+        
+        <activity 
+            android:name="com.jemcphe.teamgm.DisplayActivity"
+            android:theme="@style/Theme.Sherlock" >
         </activity>
 
         <service android:name="com.jemcphe.LeagueLib.DataService" >

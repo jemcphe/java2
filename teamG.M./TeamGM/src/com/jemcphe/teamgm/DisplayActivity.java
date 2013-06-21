@@ -3,6 +3,9 @@ package com.jemcphe.teamgm;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.jemcphe.LeagueLib.DataService;
 import com.jemcphe.LeagueLib.TeamProvider;
 
@@ -18,14 +21,56 @@ import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public class DisplayActivity extends Activity {
+public class DisplayActivity extends SherlockActivity {
 
 	static Context _context;
 	static ListView _listView;
+	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Used to put dark icons on light action bar
+        //boolean isLight = SampleList.THEME == R.style.Theme_Sherlock_Light;
+
+        menu.add("Internet")
+            .setIcon(R.drawable.internet)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+//        menu.add("Search")
+//            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//        menu.add("Refresh")
+//            .setIcon(isLight ? R.drawable.ic_refresh_inverse : R.drawable.ic_refresh)
+//            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+    	
+    	switch (item.getItemId()) {
+    	
+    	case android.R.id.home:
+    		Intent homeIntent = new Intent(_context, MainActivity.class);
+    		startActivity(homeIntent);
+    		return true;
+    		
+    	case 0:
+    		Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.erikberg.com/api"));
+        	startActivity(webIntent);
+        	return true;
+        	
+        default:
+        	return super.onOptionsItemSelected(item);
+    	
+    	}
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +78,8 @@ public class DisplayActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		_context = this;
+		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		//Set the Content View
 		setContentView(R.layout.display);
