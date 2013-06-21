@@ -131,18 +131,6 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		//Check for orientation change
-		if(savedInstanceState!=null){
-			Log.i("Saved Instance", "Orientation Change");
-			if(savedInstanceState.getString("team")!=null){
-				String team = savedInstanceState.getString("team");
-				field.setText(team);
-			}
-		}
-		
-		
-		
 		//SET THE MAIN VIEW
 		setContentView(R.layout.applayout);
 
