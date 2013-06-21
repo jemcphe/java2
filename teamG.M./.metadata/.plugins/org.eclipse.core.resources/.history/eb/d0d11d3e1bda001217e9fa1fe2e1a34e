@@ -3,6 +3,10 @@ package com.jemcphe.LeagueLib;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;

@@ -211,8 +211,6 @@ public class MainActivity extends Activity {
 		});      
 	}
 
-	
-	//Check for orientation change and save necessary data
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {  
 		super.onSaveInstanceState(savedInstanceState);  

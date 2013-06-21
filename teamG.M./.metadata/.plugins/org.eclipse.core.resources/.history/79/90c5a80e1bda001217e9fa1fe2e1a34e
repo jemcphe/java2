@@ -197,22 +197,26 @@ public class MainActivity extends Activity {
 					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
 					toast.show();
 				} else {
-					
-					/*
-					 * EXPLICIT INTENT : Per requirements for Java 2 Week 3 Assignment
-					 * This intent is designed to navigate user to another activity, in this
-					 * case, the DisplayActivity class.
-					 */
+					//Create intent to present DisplayActivity.java
 					Intent displayIntent = new Intent(_context, DisplayActivity.class);
 					startActivity(displayIntent);
-
+					
+//					//CREATE MESSENGER
+//					Messenger dataMessenger = new Messenger(dataHandler);
+//
+//					/*
+//					 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
+//					 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
+//					 */
+//					Intent dataIntent = new Intent(_context, DataService.class);
+//					dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
+//					dataIntent.putExtra(DataService.TEAM_KEY, field.getText().toString());
+//					startService(dataIntent);
 				}
 			}
 		});      
 	}
 
-	
-	//Check for orientation change and save necessary data
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {  
 		super.onSaveInstanceState(savedInstanceState);  

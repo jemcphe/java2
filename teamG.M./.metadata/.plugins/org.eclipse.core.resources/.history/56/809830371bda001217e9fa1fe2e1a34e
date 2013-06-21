@@ -4,6 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.jemcphe.teamgm.DisplayActivity;
+import com.jemcphe.teamgm.MainActivity;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -12,6 +15,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.widget.Toast;
 
 public class TeamProvider extends ContentProvider {
 
