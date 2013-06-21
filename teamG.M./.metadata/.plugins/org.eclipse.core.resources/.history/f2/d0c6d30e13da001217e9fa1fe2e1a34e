@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.jemcphe.teamgm.DisplayActivity;
 import com.jemcphe.teamgm.MainActivity;
 
 import android.content.ContentProvider;
@@ -141,7 +140,12 @@ public class TeamProvider extends ContentProvider {
 						//Add objects to the cursor
 						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
 								team.get(DataService.JSON_LOSSES)});
+					} else {
+						Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
+						toast.show();
 					}
+					
+
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -140,9 +140,20 @@ public class DisplayActivity extends SherlockActivity {
 							_listView.setAdapter(adapter);
 
 						} else {
-							Toast toast = Toast.makeText(_context, "You must enter a valid team. Go back and try again", Toast.LENGTH_LONG);
+							Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
 							toast.show();
 						}
+
+						//								//CREATE A STRING TO HOLD INFORMATION PULLED FROM STORED FILE
+						//								String teamData = FileInfo.readStringFile(_context, "team.txt", true);
+						//								//CREATE JSONARRAY FROM FILE
+						//								_teamObject = new JSONObject(teamData);
+						//								//CREATE JSONOBJECT FROM ARRAY INDEX
+						//								_data = _teamObject.getJSONArray("standing");
+						//								//CALL THE UPDATEDATA FUNCTION DEFINED EARLIER
+						//								updateData(_data);
+						//SET THE TEAMLAYOUT VISIBILITY
+						//_teamLayout.setVisibility(0);
 					}
 					catch (Exception e){
 						/*
