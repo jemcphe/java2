@@ -1022,10 +1022,12 @@ containing a value of this type.
         public static final int abs__simple_dropdown_hint=0x7f030014;
         public static final int applayout=0x7f030015;
         public static final int display=0x7f030016;
-        public static final int list_header=0x7f030017;
-        public static final int list_row=0x7f030018;
-        public static final int sherlock_spinner_dropdown_item=0x7f030019;
-        public static final int sherlock_spinner_item=0x7f03001a;
+        public static final int frag_display=0x7f030017;
+        public static final int frag_main=0x7f030018;
+        public static final int list_header=0x7f030019;
+        public static final int list_row=0x7f03001a;
+        public static final int sherlock_spinner_dropdown_item=0x7f03001b;
+        public static final int sherlock_spinner_item=0x7f03001c;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
