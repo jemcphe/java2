@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" > -->
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/AppTheme"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/headerImage"
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:src="@drawable/header" />
+
+        <LinearLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp" >
+
+            <EditText
+                android:id="@+id/searchField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="ex. Texas, New York, etc..." />
+
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/teamDataLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+<!--             <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="#ffffff"
+                android:drawSelectorOnTop="false" /> -->
+                
+                <TextView
+                android:id="@+id/teamNameData"
+                style="@style/TeamName"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:paddingLeft="10dp" />
+
+            <GridLayout
+                android:id="@+id/teamGrid"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:columnCount="2" >
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Conference:" />
+
+                <TextView
+                    android:id="@+id/conferenceData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current Rank:" />
+
+                <TextView
+                    android:id="@+id/rankData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Games Played:" />
+
+                <TextView
+                    android:id="@+id/gamesPlayedData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Record:" />
+
+                <TextView
+                    android:id="@+id/recordData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current Streak:" />
+
+                <TextView
+                    android:id="@+id/streakData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Win Average:" />
+
+                <TextView
+                    android:id="@+id/averageData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </GridLayout>
+                
+                
+                
+        </LinearLayout>
+    </LinearLayout>
+
+<!-- </ScrollView> -->
+<!-- ***************** GridLayout From Previous Version ***************** -->
+<!-- <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:adjustViewBounds="false"
+                android:clickable="false"
+                android:cropToPadding="false"
+                android:duplicateParentState="false"
+                android:longClickable="false"
+                android:src="@drawable/starting" />
+
+            <TextView
+                android:id="@+id/teamNameData"
+                style="@style/TeamName"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:paddingLeft="10dp" />
+
+            <GridLayout
+                android:id="@+id/teamDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:columnCount="2" >
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pitcher:" />
+
+                <TextView
+                    android:id="@+id/pitcherData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Catcher:" />
+
+                <TextView
+                    android:id="@+id/catcherData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="First Base:" />
+
+                <TextView
+                    android:id="@+id/firstData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Second Base:" />
+
+                <TextView
+                    android:id="@+id/secondData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Third Base:" />
+
+                <TextView
+                    android:id="@+id/thirdData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shortstop:" />
+
+                <TextView
+                    android:id="@+id/shortData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Left Field:" />
+
+                <TextView
+                    android:id="@+id/leftData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Center Field:" />
+
+                <TextView
+                    android:id="@+id/centerData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    style="@style/Column1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Right Field:" />
+
+                <TextView
+                    android:id="@+id/rightData"
+                    style="@style/Column2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </GridLayout> -->

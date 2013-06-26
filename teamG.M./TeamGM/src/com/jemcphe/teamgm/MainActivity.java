@@ -12,16 +12,22 @@ import com.jemcphe.LayoutLib.SpinnerDisplay;
 import com.jemcphe.LayoutLib.TeamSearch;
 import com.jemcphe.LeagueLib.DataService;
 import com.jemcphe.LeagueLib.FileInfo;
+import com.jemcphe.LeagueLib.SearchFragment;
+import com.jemcphe.LeagueLib.TeamProvider;
 import com.jemcphe.LeagueLib.WebData;
+
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,9 +37,8 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SearchFragment.onSearchButtonClicked{
 	//Create Linear Layouts
 	LinearLayout _mainLayout;
 	LinearLayout _historyLayout;
@@ -43,7 +48,6 @@ public class MainActivity extends Activity {
 	TeamSearch _search;
 	//TeamDisplay _teamDisplay;
 	SpinnerDisplay _teamList;
-
 	
 	//Declare Variables
 	ScrollView _scrollView;
@@ -63,21 +67,21 @@ public class MainActivity extends Activity {
 	ImageView _startingImage;
 	ListView listview;
 
-	//TeamDisplay Variables for setting values
-	String _teamName;
-	String _pitcher;
-	String _catcher;
-	String _first;
-	String _second;
-	String _third;
-	String _short;
-	String _left;
-	String _center;
-	String _right;
-
-	public static String firstNameUri;
-	public static String lastNameUri;
-	public static String conferenceUri;
+//	//TeamDisplay Variables for setting values
+//	String _teamName;
+//	String _pitcher;
+//	String _catcher;
+//	String _first;
+//	String _second;
+//	String _third;
+//	String _short;
+//	String _left;
+//	String _center;
+//	String _right;
+//
+//	public static String firstNameUri;
+//	public static String lastNameUri;
+//	public static String conferenceUri;
 
 
 	//FUNCTION FOR UPDATING TEAM DATA ON THE SCREEN
@@ -147,16 +151,16 @@ public class MainActivity extends Activity {
 		
 		
 		//SET THE MAIN VIEW
-		setContentView(R.layout.applayout);
+		setContentView(R.layout.frag_main);
 
-		//HEADER IMAGE
-		_headerImage = (ImageView) findViewById(R.drawable.header);
+//		//HEADER IMAGE
+//		_headerImage = (ImageView) findViewById(R.drawable.header);
 
 		//UNIVERSAL CONTEXT VARIABLE
 		_context = this;
 
-		//DEFINE LAYOUT THAT WILL HOLD TEAM DATA
-		_teamDataLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
+//		//DEFINE LAYOUT THAT WILL HOLD TEAM DATA
+//		_teamDataLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
 
 		//Determine data connection
 		_connected = WebData.getConnectionStatus(_context);
@@ -172,112 +176,203 @@ public class MainActivity extends Activity {
 			Toast toast = Toast.makeText(_context, "YOU CURRENTLY HAVE NO DATA CONNECTION!!", Toast.LENGTH_LONG);
 			toast.show();
 		}
-
-		//Create LinearLayout for Main Layout
-		_mainLayout = (LinearLayout) findViewById(R.layout.applayout);
-
-		//DEFINE EDITTEXT FIELD
-		field = (EditText) findViewById(R.id.searchField);
-		//field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
-		//DEFINE THE SEARCH BUTTON
-		Button searchButton = (Button) findViewById(R.id.searchButton);
+//
+//		//Create LinearLayout for Main Layout
+//		_mainLayout = (LinearLayout) findViewById(R.layout.applayout);
+//
+//		//DEFINE EDITTEXT FIELD
+//		field = (EditText) findViewById(R.id.searchField);
+//		//field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
+//		//DEFINE THE SEARCH BUTTON
+//		Button searchButton = (Button) findViewById(R.id.searchButton);
 
 //		//Create the Listview
 //		listview = (ListView) this.findViewById(R.id.list);
 //		View listHeader = this.getLayoutInflater().inflate(R.layout.list_header, null);
 //		listview.addHeaderView(listHeader);
 
+		
 		//CREATE AN ONCLICKLISTENER FOR SEARCH BUTTON THAT WILL CALL ON SERVICE CLASS
-		searchButton.setOnClickListener(new OnClickListener() {
-			@SuppressLint("HandlerLeak")
-			@Override
-			public void onClick(View v) {
-				//CHECK FOR USER ENTRY IN EDITTEXT FIELD
-				if(field.getText().toString().length() == 0){
-					//TELL USER TO ENTER A TEAM
-					
-					//AppMsg toast = AppMsg.makeText(MainActivity.this, "Please Enter A Team Name", AppMsg.STYLE_ALERT);					
-					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
-					toast.show();
-				} else {
-					
-					/*
-					 * EXPLICIT INTENT : Per requirements for Java 2 Week 3 Assignment
-					 * This intent is designed to navigate user to another activity, in this
-					 * case, the DisplayActivity class.
-					 */
-					Intent displayIntent = new Intent(_context, DisplayActivity.class);
-					startActivity(displayIntent);
-
-				}
-			}
-		}); 
+//		searchButton.setOnClickListener(new OnClickListener() {
+//			@SuppressLint("HandlerLeak")
+//			@Override
+//			public void onClick(View v) {
+//				//CHECK FOR USER ENTRY IN EDITTEXT FIELD
+//				if(field.getText().toString().length() == 0){
+//					//TELL USER TO ENTER A TEAM
+//					
+//					//AppMsg toast = AppMsg.makeText(MainActivity.this, "Please Enter A Team Name", AppMsg.STYLE_ALERT);					
+//					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
+//					toast.show();
+//				} else {
+//					
+//					/*
+//					 * EXPLICIT INTENT : Per requirements for Java 2 Week 3 Assignment
+//					 * This intent is designed to navigate user to another activity, in this
+//					 * case, the DisplayActivity class.
+//					 */
+//					Intent displayIntent = new Intent(_context, DisplayActivity.class);
+//					startActivity(displayIntent);
+//
+//				}
+//			}
+//		}); 
 		
-		getTeam();
+		//getTeam();
 		
 	}
 
+	public void startSearchActivity(String team){
+		Intent displayIntent = new Intent(_context, DisplayActivity.class);
+		displayIntent.putExtra("team", team);
+		startService();
+		startActivityForResult(displayIntent, 0);
+		
+	}
 	
-	public void getTeam() {
-		
-		Bundle teamData = getIntent().getExtras();
-		
-		if(teamData != null){
-			String teamRequested = teamData.getString("team");
-			Log.i("Team Requested", teamRequested);
-			String JSONString = FileInfo.readStringFile(_context, "team.txt", true);
-			JSONObject jsonObject = null;
-			JSONArray teamsArray = null;
-			JSONObject team = null;
-			
-			try {
-				jsonObject = new JSONObject(JSONString);
-				teamsArray = jsonObject.getJSONArray(DataService.JSON_STANDING);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
-			//Loop through all JSON Data
-			for(int i = 0; i<teamsArray.length(); i++){
-				try {
-					team = teamsArray.getJSONObject(i);
-					if(team.getString(DataService.JSON_FIRSTNAME).contentEquals(teamRequested)){
-						String teamName = team.getString("first_name") + " " + team.getString("last_name");
-						String conference = team.getString("conference");
-						String gamesPlayed = team.getString("games_played");
-						String rank = team.getString("ordinal_rank");
-						String record = team.getString("won") + " - " + team.getString("lost");
-						String streak = team.getString("streak");
-						String average = team.getString("win_percentage");
-						Log.i("TEAM NAME JSON", teamName);
+	@SuppressLint("HandlerLeak")
+	public void startService(){
 
-						((TextView) findViewById(R.id.teamNameData)).setText(teamName);
-						((TextView) findViewById(R.id.conferenceData)).setText(conference);
-						((TextView) findViewById(R.id.rankData)).setText(rank);
-						((TextView) findViewById(R.id.gamesPlayedData)).setText(gamesPlayed);
-						((TextView) findViewById(R.id.recordData)).setText(record);
-						((TextView) findViewById(R.id.streakData)).setText(streak);
-						((TextView) findViewById(R.id.averageData)).setText(average);
-						
-						_teamDataLayout.setVisibility(0);
+		//HANDLE DATA FROM SERVICE
+		Handler dataHandler = new Handler() {
 
-						//Add objects to the cursor
-						//						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
-						//								team.get(DataService.JSON_LOSSES)});
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				String response = null;
+				//CHECK FOR PROPER SERVICE COMPLETION
+				if (msg.arg1 == RESULT_OK) {
+
+					try {
+						//TELL DEBUGGER THAT SERVICE HAS FINISHED
+						response = "Service Finished";
+						Log.i("Service Status", response);
+
+						//Parse uri and use getContentResolver
+						String uriString = TeamProvider.TeamData.TEAM_NAME_URI.toString() + SearchFragment.field.getText().toString();
+						Uri uri = Uri.parse(uriString);
+						Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
+
+						if(dataCursor.moveToFirst() == true){
+							ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
+
+							for (int i = 0; i<dataCursor.getCount(); i++){
+
+								//Create HashMap for data
+								HashMap<String, String> displayMap = new HashMap<String, String>();
+								displayMap.put("team", dataCursor.getString(1));
+								displayMap.put("conference", dataCursor.getString(2));
+								displayMap.put("wins", dataCursor.getString(3));
+								displayMap.put("losses", dataCursor.getString(4));
+
+								dataCursor.moveToNext();
+
+								teamList.add(displayMap);
+							}
+//
+//							//Set up the Adapter
+//							SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
+//									new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
+//							//Instantiate the Adapter
+//							//_listView.setAdapter(adapter);
+
+						} else {
+							Toast toast = Toast.makeText(_context, "You must enter a valid team. Go back and try again", Toast.LENGTH_LONG);
+							toast.show();
+						}
 					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+					catch (Exception e){
+						/*
+						 * TELL THE USER THAT THEY NEED TO ENTER AN INVALID TEAM NAME
+						 * OR THEY NEED TO BE CONNECTED TO INTERNET FOR TEAM INFORMATION
+						 */
+						Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
+						toast.show();
+
+						Log.e("", e.getMessage().toString());
+					}
+				}	
 			}
-		}	
+		};
+		
+		//CREATE MESSENGER
+		Messenger dataMessenger = new Messenger(dataHandler);
+
+		/*
+		 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
+		 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
+		 */
+		Intent dataIntent = new Intent(_context, DataService.class);
+		dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
+		dataIntent.putExtra(DataService.TEAM_KEY, SearchFragment.field.getText().toString());
+		startService(dataIntent);
+		
 	}
+	
+	
+	
+	
+	
+//	public void getTeam() {
+//		
+//		Bundle teamData = getIntent().getExtras();
+//		
+//		if(teamData != null){
+//			String teamRequested = teamData.getString("team");
+//			Log.i("Team Requested", teamRequested);
+//			String JSONString = FileInfo.readStringFile(_context, "team.txt", true);
+//			JSONObject jsonObject = null;
+//			JSONArray teamsArray = null;
+//			JSONObject team = null;
+//			
+//			try {
+//				jsonObject = new JSONObject(JSONString);
+//				teamsArray = jsonObject.getJSONArray(DataService.JSON_STANDING);
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//			
+//			//Loop through all JSON Data
+//			for(int i = 0; i<teamsArray.length(); i++){
+//				try {
+//					team = teamsArray.getJSONObject(i);
+//					if(team.getString(DataService.JSON_FIRSTNAME).contentEquals(teamRequested)){
+//						String teamName = team.getString("first_name") + " " + team.getString("last_name");
+//						String conference = team.getString("conference");
+//						String gamesPlayed = team.getString("games_played");
+//						String rank = team.getString("ordinal_rank");
+//						String record = team.getString("won") + " - " + team.getString("lost");
+//						String streak = team.getString("streak");
+//						String average = team.getString("win_percentage");
+//						Log.i("TEAM NAME JSON", teamName);
+//
+//						((TextView) findViewById(R.id.teamNameData)).setText(teamName);
+//						((TextView) findViewById(R.id.conferenceData)).setText(conference);
+//						((TextView) findViewById(R.id.rankData)).setText(rank);
+//						((TextView) findViewById(R.id.gamesPlayedData)).setText(gamesPlayed);
+//						((TextView) findViewById(R.id.recordData)).setText(record);
+//						((TextView) findViewById(R.id.streakData)).setText(streak);
+//						((TextView) findViewById(R.id.averageData)).setText(average);
+//						
+//						_teamDataLayout.setVisibility(0);
+//
+//						//Add objects to the cursor
+//						//						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
+//						//								team.get(DataService.JSON_LOSSES)});
+//					}
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}	
+//	}
 	
 	//Check for orientation change and save necessary data
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {  
 		super.onSaveInstanceState(savedInstanceState);  
-		savedInstanceState.putString("team", field.getText().toString());
+		savedInstanceState.putString("team", SearchFragment.field.getText().toString());
 	};
 	
 	@Override
