@@ -246,6 +246,7 @@ int drawable header 0x7f020070
 int drawable ic_launcher 0x7f020071
 int drawable internet 0x7f020072
 int drawable starting 0x7f020073
+int drawable teamgm 0x7f020074
 int id abs__action_bar 0x7f040020
 int id abs__action_bar_container 0x7f04001f
 int id abs__action_bar_subtitle 0x7f040011
@@ -371,10 +372,9 @@ int string search 0x7f090014
 int string search_for_a_team_to_display_and_store_data 0x7f090011
 int string search_hint 0x7f090012
 int string show_raw_data 0x7f090010
-int style AppBaseTheme 0x7f0a005d
-int style AppTheme 0x7f0a0059
-int style Column1 0x7f0a005b
-int style Column2 0x7f0a005c
+int style AppBaseTheme 0x7f0a005c
+int style Column1 0x7f0a005a
+int style Column2 0x7f0a005b
 int style Sherlock___TextAppearance_Small 0x7f0a0046
 int style Sherlock___Theme 0x7f0a0051
 int style Sherlock___Theme_DarkActionBar 0x7f0a0053
@@ -386,7 +386,7 @@ int style Sherlock___Widget_Holo_DropDownItem 0x7f0a0029
 int style Sherlock___Widget_Holo_ListView 0x7f0a0026
 int style Sherlock___Widget_Holo_Spinner 0x7f0a0023
 int style Sherlock___Widget_SearchAutoCompleteTextView 0x7f0a0033
-int style TeamName 0x7f0a005a
+int style TeamName 0x7f0a0059
 int style TextAppearance_Sherlock 0x7f0a004a
 int style TextAppearance_Sherlock_Light_SearchResult 0x7f0a004e
 int style TextAppearance_Sherlock_Light_SearchResult_Subtitle 0x7f0a0050

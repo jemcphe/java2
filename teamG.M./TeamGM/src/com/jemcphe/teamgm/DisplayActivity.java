@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.jemcphe.LeagueLib.DisplayFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -57,13 +58,20 @@ public class DisplayActivity extends SherlockActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
+		
 		//give context a value
 		_context = this;
 
-		//Using 3rd Party ActionBarSherlock, enable support for Up Navigation
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 
+		//test for orientation
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			finish();
+			return;
+		}
+		
+		//Using 3rd Party ActionBarSherlock, enable support for Up Navigation
+				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		//Set the Content View
 		setContentView(R.layout.frag_display);
 
@@ -76,7 +84,16 @@ public class DisplayActivity extends SherlockActivity {
 			DisplayFragment displayFragment = (DisplayFragment) getFragmentManager().findFragmentById(R.id.frag_display);
 			displayFragment.getTeam(teamRequested);
 		}
+	}
+}
 
+
+
+/********************************** LEGACY CODE ***********************************/
+
+/*
+ * This code was located inside of onCreate
+ * 
 
 
 
@@ -107,96 +124,93 @@ public class DisplayActivity extends SherlockActivity {
 
 		//		//Launch startService
 		//		startService();
-
-	}
-
-	/*
-	 * This function initiates the DataService class that is required by Java 2 Assignments.
-	 * The service is designed to get the URL that grabs JSON data, send message back to handler
-	 * that lets application know that everything went OK.  If all is OK, the TeamProvider (Content Provider)
-	 * is activated via a Cursor.  If Cursor data is valid, the DisplayActivity will allow user to see the queried 
-	 * data.
-	 */
-	//	@SuppressLint("HandlerLeak")
-	//	public void startService(){
-	//
-	//		//HANDLE DATA FROM SERVICE
-	//		Handler dataHandler = new Handler() {
-	//
-	//			@Override
-	//			public void handleMessage(Message msg) {
-	//				// TODO Auto-generated method stub
-	//				String response = null;
-	//				//CHECK FOR PROPER SERVICE COMPLETION
-	//				if (msg.arg1 == RESULT_OK) {
-	//
-	//					try {
-	//						//TELL DEBUGGER THAT SERVICE HAS FINISHED
-	//						response = "Service Finished";
-	//						Log.i("Service Status", response);
-	//
-	//						//Parse uri and use getContentResolver
-	//						String uriString = TeamProvider.TeamData.TEAM_NAME_URI.toString() + SearchFragment.field.getText().toString();
-	//						Uri uri = Uri.parse(uriString);
-	//						Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
-	//
-	//						if(dataCursor.moveToFirst() == true){
-	//							ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
-	//
-	//							for (int i = 0; i<dataCursor.getCount(); i++){
-	//
-	//								//Create HashMap for data
-	//								HashMap<String, String> displayMap = new HashMap<String, String>();
-	//								displayMap.put("team", dataCursor.getString(1));
-	//								displayMap.put("conference", dataCursor.getString(2));
-	//								displayMap.put("wins", dataCursor.getString(3));
-	//								displayMap.put("losses", dataCursor.getString(4));
-	//
-	//								dataCursor.moveToNext();
-	//
-	//								teamList.add(displayMap);
-	//							}
-	//
-	//							//Set up the Adapter
-	//							SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
-	//									new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
-	//							//Instantiate the Adapter
-	//							//_listView.setAdapter(adapter);
-	//
-	//						} else {
-	//							Toast toast = Toast.makeText(_context, "You must enter a valid team. Go back and try again", Toast.LENGTH_LONG);
-	//							toast.show();
-	//						}
-	//					}
-	//					catch (Exception e){
-	//						/*
-	//						 * TELL THE USER THAT THEY NEED TO ENTER AN INVALID TEAM NAME
-	//						 * OR THEY NEED TO BE CONNECTED TO INTERNET FOR TEAM INFORMATION
-	//						 */
-	//						Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
-	//						toast.show();
-	//
-	//						Log.e("", e.getMessage().toString());
-	//					}
-	//				}	
-	//			}
-	//		};
+ */
 
 
-	//		//CREATE MESSENGER
-	//		Messenger dataMessenger = new Messenger(dataHandler);
-	//
-	//		/*
-	//		 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
-	//		 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
-	//		 */
-	//		Intent dataIntent = new Intent(_context, DataService.class);
-	//		dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
-	//		dataIntent.putExtra(DataService.TEAM_KEY, SearchFragment.field.getText().toString());
-	//		startService(dataIntent);
+/*
+ * This function initiates the DataService class that is required by Java 2 Assignments.
+ * The service is designed to get the URL that grabs JSON data, send message back to handler
+ * that lets application know that everything went OK.  If all is OK, the TeamProvider (Content Provider)
+ * is activated via a Cursor.  If Cursor data is valid, the DisplayActivity will allow user to see the queried 
+ * data.
+ */
+//	@SuppressLint("HandlerLeak")
+//	public void startService(){
+//
+//		//HANDLE DATA FROM SERVICE
+//		Handler dataHandler = new Handler() {
+//
+//			@Override
+//			public void handleMessage(Message msg) {
+//				// TODO Auto-generated method stub
+//				String response = null;
+//				//CHECK FOR PROPER SERVICE COMPLETION
+//				if (msg.arg1 == RESULT_OK) {
+//
+//					try {
+//						//TELL DEBUGGER THAT SERVICE HAS FINISHED
+//						response = "Service Finished";
+//						Log.i("Service Status", response);
+//
+//						//Parse uri and use getContentResolver
+//						String uriString = TeamProvider.TeamData.TEAM_NAME_URI.toString() + SearchFragment.field.getText().toString();
+//						Uri uri = Uri.parse(uriString);
+//						Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
+//
+//						if(dataCursor.moveToFirst() == true){
+//							ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
+//
+//							for (int i = 0; i<dataCursor.getCount(); i++){
+//
+//								//Create HashMap for data
+//								HashMap<String, String> displayMap = new HashMap<String, String>();
+//								displayMap.put("team", dataCursor.getString(1));
+//								displayMap.put("conference", dataCursor.getString(2));
+//								displayMap.put("wins", dataCursor.getString(3));
+//								displayMap.put("losses", dataCursor.getString(4));
+//
+//								dataCursor.moveToNext();
+//
+//								teamList.add(displayMap);
+//							}
+//
+//							//Set up the Adapter
+//							SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
+//									new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
+//							//Instantiate the Adapter
+//							//_listView.setAdapter(adapter);
+//
+//						} else {
+//							Toast toast = Toast.makeText(_context, "You must enter a valid team. Go back and try again", Toast.LENGTH_LONG);
+//							toast.show();
+//						}
+//					}
+//					catch (Exception e){
+//						/*
+//						 * TELL THE USER THAT THEY NEED TO ENTER AN INVALID TEAM NAME
+//						 * OR THEY NEED TO BE CONNECTED TO INTERNET FOR TEAM INFORMATION
+//						 */
+//						Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
+//						toast.show();
+//
+//						Log.e("", e.getMessage().toString());
+//					}
+//				}	
+//			}
+//		};
 
 
-}
+//		//CREATE MESSENGER
+//		Messenger dataMessenger = new Messenger(dataHandler);
+//
+//		/*
+//		 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
+//		 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
+//		 */
+//		Intent dataIntent = new Intent(_context, DataService.class);
+//		dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
+//		dataIntent.putExtra(DataService.TEAM_KEY, SearchFragment.field.getText().toString());
+//		startService(dataIntent);
 
 //	public void getTeam() {
 //

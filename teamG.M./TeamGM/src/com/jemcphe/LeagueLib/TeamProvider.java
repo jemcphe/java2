@@ -22,6 +22,7 @@ public class TeamProvider extends ContentProvider {
 		//Create URI Definitions
 		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/teams/");
 		public static final Uri TEAM_NAME_URI = Uri.parse("content://" + AUTHORITY + "/teams/firstname/");
+		public static final Uri LAST_NAME_URI = Uri.parse("content://" + AUTHORITY + "/teams/lastname/");
 		public static final Uri CONFERENCE_URI = Uri.parse("content://" + AUTHORITY + "/teams/conference/");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jemcphe.teamgm.team";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item /vnd.jemcphe.teamgm.team";
@@ -126,9 +127,7 @@ public class TeamProvider extends ContentProvider {
 		case TEAMS_FIRST_NAME_FILTER:
 			
 			String firstNameRequested = uri.getLastPathSegment();
-			
-			//MainActivity.firstNameUri = TeamProvider.TeamData.TEAM_NAME_URI.toString() + MainActivity.field.getText().toString();
-			
+						
 			//Loop through all JSON Data
 			for(int i = 0; i<teamsArray.length(); i++){
 				try {
@@ -143,22 +142,6 @@ public class TeamProvider extends ContentProvider {
 					e.printStackTrace();
 				}
 			}
-			
-			
-//			//Loop through all JSON Data
-//			for(int i = 0; i<teamsArray.length(); i++){
-//				try {
-//					team = teamsArray.getJSONObject(i);
-//
-//					//Add objects to the cursor
-//					result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
-//							team.get(DataService.JSON_LOSSES)});
-//
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
 
 			break;
 		case TEAMS_LAST_NAME_FILTER:
@@ -169,7 +152,7 @@ public class TeamProvider extends ContentProvider {
 			for(int i = 0; i<teamsArray.length(); i++){
 				try {
 					team = teamsArray.getJSONObject(i);
-					Log.i("CONFERENCE FILTER", team.toString());
+					Log.i("Last Name Filter", team.toString());
 					if(team.getString(DataService.JSON_LASTNAME).contentEquals(lastNameRequested)){
 						//Add objects to the cursor
 						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_LASTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 

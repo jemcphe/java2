@@ -5,13 +5,15 @@ import java.util.HashMap;
 
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Menu;
 import com.jemcphe.LayoutLib.SpinnerDisplay;
 import com.jemcphe.LayoutLib.TeamSearch;
 import com.jemcphe.LeagueLib.DataService;
-import com.jemcphe.LeagueLib.FileInfo;
+import com.jemcphe.LeagueLib.DisplayFragment;
 import com.jemcphe.LeagueLib.SearchFragment;
 import com.jemcphe.LeagueLib.TeamProvider;
 import com.jemcphe.LeagueLib.WebData;
@@ -22,23 +24,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements SearchFragment.onSearchButtonClicked{
+public class MainActivity extends SherlockActivity implements SearchFragment.OnSearchButtonClicked{
 	//Create Linear Layouts
 	LinearLayout _mainLayout;
 	LinearLayout _historyLayout;
@@ -67,72 +66,7 @@ public class MainActivity extends Activity implements SearchFragment.onSearchBut
 	ImageView _startingImage;
 	ListView listview;
 
-//	//TeamDisplay Variables for setting values
-//	String _teamName;
-//	String _pitcher;
-//	String _catcher;
-//	String _first;
-//	String _second;
-//	String _third;
-//	String _short;
-//	String _left;
-//	String _center;
-//	String _right;
-//
-//	public static String firstNameUri;
-//	public static String lastNameUri;
-//	public static String conferenceUri;
 
-
-	//FUNCTION FOR UPDATING TEAM DATA ON THE SCREEN
-	public void updateData(JSONArray data){
-		Log.i("JSONArray data", data.toString());
-		ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
-
-		try {
-			for(int i=0; i<data.length(); i++){
-				JSONObject teamObject = data.getJSONObject(i);
-				Log.i("JSONObject", teamObject.toString());
-				Log.i("JSONObject", teamObject.getString("first_name"));
-				String teamName = teamObject.getString("first_name") + " " + teamObject.getString("last_name");
-				String wins = teamObject.getString("won");
-				String losses = teamObject.getString("lost");
-
-				//Create HashMap for data
-				HashMap<String, String> displayMap = new HashMap<String, String>();
-				displayMap.put("team", teamName);
-				displayMap.put("wins", wins);
-				displayMap.put("losses", losses);
-
-				teamList.add(displayMap);
-			}
-
-			//Set up the Adapter
-			SimpleAdapter adapter = new SimpleAdapter(this, teamList, R.layout.list_row,
-					new String[] {"team", "wins", "losses"}, 
-					new int[] {R.id.team, R.id.wins, R.id.losses});
-
-			//Instantiate the Adapter
-			listview.setAdapter(adapter);
-
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			Log.e("JSON ERROR", e.toString());
-		}
-
-		//LEGACY GRIDLAYOUT
-		//		((TextView) findViewById(R.id.teamNameData)).setText(data.getString("location") + " " + data.getString("name"));
-		//		((TextView) findViewById(R.id.pitcherData)).setText(data.getString("pitcher"));
-		//		((TextView) findViewById(R.id.catcherData)).setText(data.getString("catcher"));
-		//		((TextView) findViewById(R.id.firstData)).setText(data.getString("first"));
-		//		((TextView) findViewById(R.id.secondData)).setText(data.getString("second"));
-		//		((TextView) findViewById(R.id.thirdData)).setText(data.getString("third"));
-		//		((TextView) findViewById(R.id.shortData)).setText(data.getString("short"));
-		//		((TextView) findViewById(R.id.leftData)).setText(data.getString("left"));
-		//		((TextView) findViewById(R.id.centerData)).setText(data.getString("center"));
-		//		((TextView) findViewById(R.id.rightData)).setText(data.getString("right"));
-
-	}
 
 
 	@Override
@@ -140,27 +74,21 @@ public class MainActivity extends Activity implements SearchFragment.onSearchBut
 		super.onCreate(savedInstanceState);
 		
 		//Check for orientation change
-		if(savedInstanceState!=null){
-			Log.i("Saved Instance", "Orientation Change");
-			if(savedInstanceState.getString("team")!=null){
-				String team = savedInstanceState.getString("team");
-				field.setText(team);
-			}
-		}
+//		if(savedInstanceState!=null){
+//			Log.i("Saved Instance", "Orientation Change");
+//			if(savedInstanceState.getString("team")!=null){
+//				String team = savedInstanceState.getString("team");
+//				field.setText(team);
+//			}
+//		}
 		
 		
 		
 		//SET THE MAIN VIEW
 		setContentView(R.layout.frag_main);
 
-//		//HEADER IMAGE
-//		_headerImage = (ImageView) findViewById(R.drawable.header);
-
 		//UNIVERSAL CONTEXT VARIABLE
 		_context = this;
-
-//		//DEFINE LAYOUT THAT WILL HOLD TEAM DATA
-//		_teamDataLayout = (LinearLayout) findViewById(R.id.teamDataLayout);
 
 		//Determine data connection
 		_connected = WebData.getConnectionStatus(_context);
@@ -176,60 +104,29 @@ public class MainActivity extends Activity implements SearchFragment.onSearchBut
 			Toast toast = Toast.makeText(_context, "YOU CURRENTLY HAVE NO DATA CONNECTION!!", Toast.LENGTH_LONG);
 			toast.show();
 		}
-//
-//		//Create LinearLayout for Main Layout
-//		_mainLayout = (LinearLayout) findViewById(R.layout.applayout);
-//
-//		//DEFINE EDITTEXT FIELD
-//		field = (EditText) findViewById(R.id.searchField);
-//		//field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
-//		//DEFINE THE SEARCH BUTTON
-//		Button searchButton = (Button) findViewById(R.id.searchButton);
-
-//		//Create the Listview
-//		listview = (ListView) this.findViewById(R.id.list);
-//		View listHeader = this.getLayoutInflater().inflate(R.layout.list_header, null);
-//		listview.addHeaderView(listHeader);
-
-		
-		//CREATE AN ONCLICKLISTENER FOR SEARCH BUTTON THAT WILL CALL ON SERVICE CLASS
-//		searchButton.setOnClickListener(new OnClickListener() {
-//			@SuppressLint("HandlerLeak")
-//			@Override
-//			public void onClick(View v) {
-//				//CHECK FOR USER ENTRY IN EDITTEXT FIELD
-//				if(field.getText().toString().length() == 0){
-//					//TELL USER TO ENTER A TEAM
-//					
-//					//AppMsg toast = AppMsg.makeText(MainActivity.this, "Please Enter A Team Name", AppMsg.STYLE_ALERT);					
-//					Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
-//					toast.show();
-//				} else {
-//					
-//					/*
-//					 * EXPLICIT INTENT : Per requirements for Java 2 Week 3 Assignment
-//					 * This intent is designed to navigate user to another activity, in this
-//					 * case, the DisplayActivity class.
-//					 */
-//					Intent displayIntent = new Intent(_context, DisplayActivity.class);
-//					startActivity(displayIntent);
-//
-//				}
-//			}
-//		}); 
-		
-		//getTeam();
 		
 	}
 
-	public void startSearchActivity(String team){
+	public void startSearchActivity(String teamRequested){
+		/*
+		 * EXPLICIT INTENT : Per requirements for Java 2 Week 3 Assignment
+		 * This intent is designed to navigate user to another activity, in this
+		 * case, the DisplayActivity class.
+		 */
 		Intent displayIntent = new Intent(_context, DisplayActivity.class);
-		displayIntent.putExtra("team", team);
+		displayIntent.putExtra("team", teamRequested);
+		//Begin the service
 		startService();
 		startActivityForResult(displayIntent, 0);
 		
 	}
 	
+	/*
+	 * this service was created to grab the JSON from the erikberg API and save
+	 * it to local storage. This makes the app useable when the there is no data
+	 * connection... provided it is not a first time use.  In which case, the user
+	 * will be notified that they must have a data connection.
+	 */
 	@SuppressLint("HandlerLeak")
 	public void startService(){
 
@@ -249,7 +146,7 @@ public class MainActivity extends Activity implements SearchFragment.onSearchBut
 						Log.i("Service Status", response);
 
 						//Parse uri and use getContentResolver
-						String uriString = TeamProvider.TeamData.TEAM_NAME_URI.toString() + SearchFragment.field.getText().toString();
+						String uriString = TeamProvider.TeamData.LAST_NAME_URI	.toString() + SearchFragment.field.getText().toString();
 						Uri uri = Uri.parse(uriString);
 						Cursor dataCursor = getContentResolver().query(uri, TeamProvider.TeamData.PROJECTION, null, null, null);
 
@@ -269,12 +166,13 @@ public class MainActivity extends Activity implements SearchFragment.onSearchBut
 
 								teamList.add(displayMap);
 							}
-//
-//							//Set up the Adapter
-//							SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
-//									new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
-//							//Instantiate the Adapter
-//							//_listView.setAdapter(adapter);
+
+							/* Set up the Adapter
+							SimpleAdapter adapter = new SimpleAdapter(_context, teamList, R.layout.list_row, 
+									new String[] {"team", "conference", "wins", "losses"}, new int[] {R.id.team,R.id.conference, R.id.wins, R.id.losses});
+							Instantiate the Adapter
+							_listView.setAdapter(adapter);
+							 */
 
 						} else {
 							Toast toast = Toast.makeText(_context, "You must enter a valid team. Go back and try again", Toast.LENGTH_LONG);
@@ -309,65 +207,6 @@ public class MainActivity extends Activity implements SearchFragment.onSearchBut
 		
 	}
 	
-	
-	
-	
-	
-//	public void getTeam() {
-//		
-//		Bundle teamData = getIntent().getExtras();
-//		
-//		if(teamData != null){
-//			String teamRequested = teamData.getString("team");
-//			Log.i("Team Requested", teamRequested);
-//			String JSONString = FileInfo.readStringFile(_context, "team.txt", true);
-//			JSONObject jsonObject = null;
-//			JSONArray teamsArray = null;
-//			JSONObject team = null;
-//			
-//			try {
-//				jsonObject = new JSONObject(JSONString);
-//				teamsArray = jsonObject.getJSONArray(DataService.JSON_STANDING);
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//			
-//			//Loop through all JSON Data
-//			for(int i = 0; i<teamsArray.length(); i++){
-//				try {
-//					team = teamsArray.getJSONObject(i);
-//					if(team.getString(DataService.JSON_FIRSTNAME).contentEquals(teamRequested)){
-//						String teamName = team.getString("first_name") + " " + team.getString("last_name");
-//						String conference = team.getString("conference");
-//						String gamesPlayed = team.getString("games_played");
-//						String rank = team.getString("ordinal_rank");
-//						String record = team.getString("won") + " - " + team.getString("lost");
-//						String streak = team.getString("streak");
-//						String average = team.getString("win_percentage");
-//						Log.i("TEAM NAME JSON", teamName);
-//
-//						((TextView) findViewById(R.id.teamNameData)).setText(teamName);
-//						((TextView) findViewById(R.id.conferenceData)).setText(conference);
-//						((TextView) findViewById(R.id.rankData)).setText(rank);
-//						((TextView) findViewById(R.id.gamesPlayedData)).setText(gamesPlayed);
-//						((TextView) findViewById(R.id.recordData)).setText(record);
-//						((TextView) findViewById(R.id.streakData)).setText(streak);
-//						((TextView) findViewById(R.id.averageData)).setText(average);
-//						
-//						_teamDataLayout.setVisibility(0);
-//
-//						//Add objects to the cursor
-//						//						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
-//						//								team.get(DataService.JSON_LOSSES)});
-//					}
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}	
-//	}
-	
 	//Check for orientation change and save necessary data
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {  
@@ -375,11 +214,44 @@ public class MainActivity extends Activity implements SearchFragment.onSearchBut
 		savedInstanceState.putString("team", SearchFragment.field.getText().toString());
 	};
 	
+	//Create the ActionBar via SherlockActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+
+		menu.add("Internet")
+		.setIcon(R.drawable.internet)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
 		return true;
+	}
+
+	//Check for which ActionBar Item is selected
+		@Override
+		public boolean onOptionsItemSelected(MenuItem item){
+			
+				Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.erikberg.com/api"));
+				startActivity(webIntent);
+				return true;
+
+		}
+	
+	@Override
+	public void onSearchButtonClicked(String teamRequested) {
+		// TODO Auto-generated method stub
+		
+		
+		//Define fragment for calling methods
+		DisplayFragment displayFragment = (DisplayFragment) getFragmentManager().findFragmentById(R.id.frag_display);
+		
+		if (displayFragment != null && displayFragment.isInLayout()){
+			//call getTeam method
+			displayFragment.getTeam(teamRequested);
+		}
+		else {
+			startSearchActivity(teamRequested);
+		}
+		
+		
 	}
 
 	/********************************** LEGACY CODE ***********************************/
@@ -487,4 +359,40 @@ public class MainActivity extends Activity implements SearchFragment.onSearchBut
 	//	}
 
 
+	//FUNCTION FOR UPDATING TEAM DATA ON THE SCREEN
+//	public void updateData(JSONArray data){
+//		Log.i("JSONArray data", data.toString());
+//		ArrayList<HashMap<String, String>> teamList = new ArrayList<HashMap<String, String>>();
+//
+//		try {
+//			for(int i=0; i<data.length(); i++){
+//				JSONObject teamObject = data.getJSONObject(i);
+//				Log.i("JSONObject", teamObject.toString());
+//				Log.i("JSONObject", teamObject.getString("first_name"));
+//				String teamName = teamObject.getString("first_name") + " " + teamObject.getString("last_name");
+//				String wins = teamObject.getString("won");
+//				String losses = teamObject.getString("lost");
+//
+//				//Create HashMap for data
+//				HashMap<String, String> displayMap = new HashMap<String, String>();
+//				displayMap.put("team", teamName);
+//				displayMap.put("wins", wins);
+//				displayMap.put("losses", losses);
+//
+//				teamList.add(displayMap);
+//			}
+//
+//			//Set up the Adapter
+//			SimpleAdapter adapter = new SimpleAdapter(this, teamList, R.layout.list_row,
+//					new String[] {"team", "wins", "losses"}, 
+//					new int[] {R.id.team, R.id.wins, R.id.losses});
+//
+//			//Instantiate the Adapter
+//			listview.setAdapter(adapter);
+//
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			Log.e("JSON ERROR", e.toString());
+//		}
+//	}
 }

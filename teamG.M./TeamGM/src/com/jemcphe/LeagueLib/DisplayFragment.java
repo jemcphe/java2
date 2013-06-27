@@ -74,7 +74,7 @@ public class DisplayFragment extends Fragment {
 			for(int i = 0; i<teamsArray.length(); i++){
 				try {
 					team = teamsArray.getJSONObject(i);
-					if(team.getString(DataService.JSON_FIRSTNAME).contentEquals(teamRequested)){
+					if(team.getString(DataService.JSON_LASTNAME).contentEquals(teamRequested)){
 						String teamNameData = team.getString("first_name") + " " + team.getString("last_name");
 						String conferenceData = team.getString("conference");
 						String gamesPlayedData = team.getString("games_played");

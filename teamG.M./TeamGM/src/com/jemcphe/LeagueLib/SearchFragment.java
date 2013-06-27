@@ -49,12 +49,12 @@ public class SearchFragment extends Fragment implements OnClickListener{
 	ListView listview;
 
 	//Create an Interface to communicate with Activity
-	public interface onSearchButtonClicked {
-		void startSearchActivity(String teamSearch);
+	public interface OnSearchButtonClicked {
+		void onSearchButtonClicked(String teamSearch);
 	}
 	
 	//Create a private connection to MainActivity method startSearchActivity
-	private onSearchButtonClicked parentActivity;
+	private OnSearchButtonClicked parentActivity;
 	
 	
 	@Override
@@ -62,8 +62,8 @@ public class SearchFragment extends Fragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
 		
-		if(activity instanceof onSearchButtonClicked){
-			parentActivity = (onSearchButtonClicked) activity;
+		if(activity instanceof OnSearchButtonClicked){
+			parentActivity = (OnSearchButtonClicked) activity;
 		}
 		else {
 			throw new ClassCastException(activity.toString() + "must implement onSearchButtonClicked");
@@ -90,8 +90,9 @@ public class SearchFragment extends Fragment implements OnClickListener{
 
 		//DEFINE EDITTEXT FIELD
 		field = (EditText) view.findViewById(R.id.searchField);
+		//Temp Value for Testing
 		field.setText("Texas");
-		//field.setText(TeamProvider.TeamData.CONTENT_URI.toString());
+		
 		//DEFINE THE SEARCH BUTTON
 		Button searchButton = (Button) view.findViewById(R.id.searchButton);
 		searchButton.setOnClickListener(this);
@@ -115,16 +116,9 @@ public class SearchFragment extends Fragment implements OnClickListener{
 			toast.show();
 		} else {
 			
-			String teamSearch = field.getText().toString();
+			String teamRequested = field.getText().toString();
 			
-			parentActivity.startSearchActivity(teamSearch);
-			/*
-			 * EXPLICIT INTENT : Per requirements for Java 2 Week 3 Assignment
-			 * This intent is designed to navigate user to another activity, in this
-			 * case, the DisplayActivity class.
-			 */
-//			Intent displayIntent = new Intent(_context, DisplayActivity.class);
-//			startActivity(displayIntent);
+			parentActivity.onSearchButtonClicked(teamRequested);
 
 		}
 	}

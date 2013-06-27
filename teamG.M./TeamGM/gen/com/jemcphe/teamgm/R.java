@@ -917,6 +917,7 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020071;
         public static final int internet=0x7f020072;
         public static final int starting=0x7f020073;
+        public static final int teamgm=0x7f020074;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f040020;
@@ -1092,10 +1093,9 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f0a005d;
-        public static final int AppTheme=0x7f0a0059;
-        public static final int Column1=0x7f0a005b;
-        public static final int Column2=0x7f0a005c;
+        public static final int AppBaseTheme=0x7f0a005c;
+        public static final int Column1=0x7f0a005a;
+        public static final int Column2=0x7f0a005b;
         public static final int Sherlock___TextAppearance_Small=0x7f0a0046;
         public static final int Sherlock___Theme=0x7f0a0051;
         public static final int Sherlock___Theme_DarkActionBar=0x7f0a0053;
@@ -1107,7 +1107,7 @@ containing a value of this type.
         public static final int Sherlock___Widget_Holo_ListView=0x7f0a0026;
         public static final int Sherlock___Widget_Holo_Spinner=0x7f0a0023;
         public static final int Sherlock___Widget_SearchAutoCompleteTextView=0x7f0a0033;
-        public static final int TeamName=0x7f0a005a;
+        public static final int TeamName=0x7f0a0059;
         public static final int TextAppearance_Sherlock=0x7f0a004a;
         public static final int TextAppearance_Sherlock_Light_SearchResult=0x7f0a004e;
         public static final int TextAppearance_Sherlock_Light_SearchResult_Subtitle=0x7f0a0050;
