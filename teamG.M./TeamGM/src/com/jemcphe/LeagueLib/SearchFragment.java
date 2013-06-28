@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import com.jemcphe.teamgm.R;
 
 import android.app.Activity;
@@ -91,7 +90,7 @@ public class SearchFragment extends Fragment implements OnClickListener{
 		//DEFINE EDITTEXT FIELD
 		field = (EditText) view.findViewById(R.id.searchField);
 		//Temp Value for Testing
-		field.setText("Texas");
+//		field.setText("Rangers");
 		
 		//DEFINE THE SEARCH BUTTON
 		Button searchButton = (Button) view.findViewById(R.id.searchButton);
@@ -103,20 +102,16 @@ public class SearchFragment extends Fragment implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		//		@SuppressLint("HandlerLeak")
-		//		@Override
-		//		public void onClick(View v) {
+		String teamRequested = field.getText().toString();
+		
 		//CHECK FOR USER ENTRY IN EDITTEXT FIELD
-		if(field.getText().toString().length() == 0){
+		if(teamRequested.length() == 0){
 			//TELL USER TO ENTER A TEAM
 
 			//AppMsg toast = AppMsg.makeText(MainActivity.this, "Please Enter A Team Name", AppMsg.STYLE_ALERT);					
 			Toast toast = Toast.makeText(_context, "Please Enter A Team Name", Toast.LENGTH_LONG);
 			toast.show();
 		} else {
-			
-			String teamRequested = field.getText().toString();
 			
 			parentActivity.onSearchButtonClicked(teamRequested);
 

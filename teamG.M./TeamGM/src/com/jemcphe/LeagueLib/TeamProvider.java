@@ -136,6 +136,7 @@ public class TeamProvider extends ContentProvider {
 						//Add objects to the cursor
 						result.addRow(new Object[] { i + 1, team.get(DataService.JSON_FIRSTNAME), team.get(DataService.JSON_CONFERENCE), team.get(DataService.JSON_WINS), 
 								team.get(DataService.JSON_LOSSES)});
+						
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

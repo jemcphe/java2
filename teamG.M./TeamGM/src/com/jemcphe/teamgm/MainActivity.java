@@ -95,6 +95,8 @@ public class MainActivity extends SherlockActivity implements SearchFragment.OnS
 
 		//Check for connection
 		if(_connected) {
+			//Begin the service
+			storeDataToFile();
 			//DISPLAY CONNECTION TYPE TO USER
 			Toast toast = Toast.makeText(_context, "Currently connected via " + WebData.getConnectionType(_context).toString(), Toast.LENGTH_SHORT);
 			toast.show();
@@ -113,13 +115,55 @@ public class MainActivity extends SherlockActivity implements SearchFragment.OnS
 		 * This intent is designed to navigate user to another activity, in this
 		 * case, the DisplayActivity class.
 		 */
+		startService();
 		Intent displayIntent = new Intent(_context, DisplayActivity.class);
 		displayIntent.putExtra("team", teamRequested);
-		//Begin the service
-		startService();
 		startActivityForResult(displayIntent, 0);
 		
 	}
+	
+	@SuppressLint("HandlerLeak")
+	public void storeDataToFile(){
+
+		//HANDLE DATA FROM SERVICE
+		Handler dataHandler = new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				String response = null;
+				//CHECK FOR PROPER SERVICE COMPLETION
+				if (msg.arg1 == RESULT_OK) {
+
+					try {
+						//TELL DEBUGGER THAT SERVICE HAS FINISHED
+						response = "Service Finished";
+						Log.i("Service Status", response);
+					}
+					catch (Exception e){
+						Log.e("", e.getMessage().toString());
+					}
+				}	
+			}
+		};
+		
+		//CREATE MESSENGER
+		Messenger dataMessenger = new Messenger(dataHandler);
+
+		/*
+		 * CREATE INTENT & PUT MESSENGER_KEY & TEAM_KEY TO BE
+		 * PASSED TO THE DATASERVICE CLASS AND INITIATE THE INTENT
+		 */
+		Intent dataIntent = new Intent(_context, DataService.class);
+		dataIntent.putExtra(DataService.MESSENGER_KEY, dataMessenger);
+		startService(dataIntent);
+	}
+	
+	
+	
+	
+	
+	
 	
 	/*
 	 * this service was created to grab the JSON from the erikberg API and save
@@ -175,8 +219,8 @@ public class MainActivity extends SherlockActivity implements SearchFragment.OnS
 							 */
 
 						} else {
-							Toast toast = Toast.makeText(_context, "You must enter a valid team. Go back and try again", Toast.LENGTH_LONG);
-							toast.show();
+//							Toast toast = Toast.makeText(_context, "You must enter a valid team. Go back and try again", Toast.LENGTH_LONG);
+//							toast.show();
 						}
 					}
 					catch (Exception e){
@@ -184,8 +228,8 @@ public class MainActivity extends SherlockActivity implements SearchFragment.OnS
 						 * TELL THE USER THAT THEY NEED TO ENTER AN INVALID TEAM NAME
 						 * OR THEY NEED TO BE CONNECTED TO INTERNET FOR TEAM INFORMATION
 						 */
-						Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
-						toast.show();
+//						Toast toast = Toast.makeText(_context, "Please Enter A Valid Team Name Or Try Connecting To Internet For This Team's Information", Toast.LENGTH_LONG);
+//						toast.show();
 
 						Log.e("", e.getMessage().toString());
 					}
